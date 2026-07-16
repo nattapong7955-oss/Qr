@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom QR Code Generator</title>
+    <!-- เรียกใช้ easyqrcodejs เวอร์ชันที่รองรับการปรับแต่งสีและใส่โลโก้ -->
+    <script src="https://cdn.jsdelivr.net/npm/easyqrcodejs@4.4.1/dist/easy.qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 450px;
+            box-sizing: border-box;
+        }
+        h2 { text-align: center; color: #0f172a; margin-top: 0; margin-bottom: 25px; }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #475569;
+            font-size: 14px;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        textarea { height: 70px; resize: none; }
+        .color-pickers {
+            display: flex;
+            gap: 15px;
+        }
+        .color-item { flex: 1; }
+        input[type="color"] {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            cursor: pointer;
+            background: none;
+            padding: 0;
+        }
+        button {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #1d4ed8; }
+        .result-area {
+            text-align: center;
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px dashed #e2e8f0;
+            min-height: 240px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>QR Code Customizer</h2>
+    
+    <!-- 1. ช่องกรอกข้อมูล -->
+    <div class="form-group">
+        <label for="text-input">ลิงก์เว็บ หรือ ข้อความ</label>
+        <textarea id="text-input" placeholder="วางลิงก์ URL หรือพิมพ์ข้อความที่ต้องการ...">https://www.google.com</textarea>
+    </div>
+    
+    <!-- 2. ส่วนเลือกสี -->
+    <div class="form-group color-pickers">
+        <div class="color-item">
+            <label for="dot-color">สีจุด QR Code</label>
+            <input type="color" id="dot-color" value="#0f172a">
+        </div>
+        <div class="color-item">
+            <label for="bg-color">สีพื้นหลัง</label>
+            <input type="color" id="bg-color" value="#ffffff">
+        </div>
+    </div>
+    
+    <!-- 3. ช่องใส่ลิงก์โลโก้ -->
+    <div class="form-group">
+        <label for="logo-input">URL รูปภาพโลโก้ตรงกลาง (ถ้ามี)</label>
+        <input type="text" id="logo-input" placeholder="วางลิงก์รูปภาพ .png หรือ .jpg ที่นี่">
+    </div>
+    
+    <button onclick="generateCustomQR()">สร้าง QR Code</button>
+    
+    <!-- พื้นที่แสดงผลลัพธ์ -->
+    <div class="result-area">
+        <div id="qrcode"></div>
+    </div>
+</div>
+
+<script>
+    function generateCustomQR() {
+        const textValue = document.getElementById("text-input").value;
+        const dotColor = document.getElementById("dot-color").value;
+        const bgColor = document.getElementById("bg-color").value;
+        const logoUrl = document.getElementById("logo-input").value.trim();
+
+        if (!textValue.trim()) {
+            alert("กรุณากรอกข้อความหรือลิงก์ก่อนนะครับ");
+            return;
+        }
+
+        // ล้าง QR Code อันเก่าออกก่อนสร้างอันใหม่
+        const qrContainer = document.getElementById("qrcode");
+        qrContainer.innerHTML = "";
+
+        // กำหนด Options การปรับแต่งสำหรับ easyqrcodejs
+        let options = {
+            text: textValue,
+            width: 240,
+            height: 240,
+            colorDark: dotColor,    // กำหนดสีของจุดข้อมูล
+            colorLight: bgColor,    // กำหนดสีพื้นหลัง
+            correctLevel: QRCode.CorrectLevel.H // ใช้ระดับ H เพื่อให้ทนทานต่อการถูกโลโก้บัง
+        };
+
+        // ตรวจสอบว่ามีการใส่ลิงก์โลโก้หรือไม่
+        if (logoUrl !== "") {
+            options.logo = logoUrl;
+            options.logoWidth = 60;              // กำหนดความกว้างโลโก้ (หน่วยพิกเซล)
+            options.logoHeight = 60;             // กำหนดความสูงโลโก้ (หน่วยพิกเซล)
+            options.logoBgColor = bgColor;       // ใส่สีพื้นหลังให้ตัวโลโก้เพื่อตัดขอบให้สแกนง่ายขึ้น
+            options.logoBackgroundTransparent = false; // ปิดความโปร่งแสงของพื้นหลังโลโก้
+        }
+
+        // สั่งวาด QR Code ใหม่
+        new QRCode(qrContainer, options);
+    }
+
+    // เจนผลลัพธ์เริ่มต้นทันทีเมื่อเปิดหน้าเว็บ
+    window.onload = function() {
+        generateCustomQR();
+    };
+</script>
+
+</body>
+</html>
