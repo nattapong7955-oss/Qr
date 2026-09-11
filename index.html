@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
->
+<title>QR Code Customizer V2</title>
 
-<meta
-    name="theme-color"
-    content="#2563eb"
->
-
-<title>QR Code Customizer V2.2</title>
+<!-- EasyQRCodeJS -->
+<script src="https://cdn.jsdelivr.net/npm/easyqrcodejs@4.4.1/dist/easy.qrcode.min.js"></script>
 
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #cbd5e1;
+    --input-bg: #ffffff;
+    --preview-bg: #f8fafc;
+    --danger: #dc2626;
+    --success: #16a34a;
+}
 
 * {
     box-sizing: border-box;
@@ -32,10 +34,7 @@ html {
 
 body {
     margin: 0;
-    padding: 20px;
-
     min-height: 100vh;
-
     font-family:
         "Segoe UI",
         Tahoma,
@@ -43,198 +42,73 @@ body {
         Verdana,
         sans-serif;
 
-    background: #f1f5f9;
-    color: #0f172a;
-
-    transition:
-        background .25s,
-        color .25s;
-}
-
-body.dark {
-    background: #0f172a;
-    color: #f8fafc;
+    background: var(--bg);
+    color: var(--text);
 }
 
 button,
 input,
 textarea,
 select {
-    font-family: inherit;
+    font: inherit;
 }
 
-/* =========================================================
-   VARIABLES
-========================================================= */
-
-:root {
-    --primary: #2563eb;
-    --primary-hover: #1d4ed8;
-
-    --card: #ffffff;
-    --input: #ffffff;
-
-    --text: #0f172a;
-    --muted: #64748b;
-
-    --border: #cbd5e1;
-
-    --preview: #f8fafc;
-
-    --success: #16a34a;
-    --danger: #dc2626;
-
-    --shadow:
-        0 10px 30px rgba(15, 23, 42, .07);
+button {
+    -webkit-tap-highlight-color: transparent;
 }
-
-body.dark {
-    --card: #1e293b;
-    --input: #0f172a;
-
-    --text: #f8fafc;
-    --muted: #94a3b8;
-
-    --border: #475569;
-
-    --preview: #111827;
-
-    --shadow:
-        0 10px 30px rgba(0, 0, 0, .25);
-}
-
-/* =========================================================
-   APP
-========================================================= */
 
 .app {
     width: 100%;
-    max-width: 1100px;
+    max-width: 1180px;
     margin: auto;
+    padding: 24px;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
+/* =========================
+   Header
+========================= */
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    gap: 15px;
-
-    margin-bottom: 20px;
+    text-align: center;
+    margin-bottom: 24px;
 }
 
-.title-area {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.app-icon {
-    width: 50px;
-    height: 50px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 15px;
-
-    background: var(--primary);
-    color: white;
-
-    font-size: 27px;
-
-    box-shadow:
-        0 10px 25px rgba(37, 99, 235, .25);
-}
-
-h1 {
+.header h1 {
     margin: 0;
-
-    font-size: 23px;
-    line-height: 1.2;
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 800;
 }
 
-.subtitle {
-    margin-top: 4px;
-
-    font-size: 13px;
-
+.header p {
+    margin: 8px 0 0;
     color: var(--muted);
+    font-size: 15px;
 }
 
-.header-buttons {
-    display: flex;
-    gap: 8px;
-}
+/* =========================
+   Layout
+========================= */
 
-.icon-button {
-    width: 44px;
-    height: 44px;
-
-    border-radius: 11px;
-
-    border: 1px solid var(--border);
-
-    background: var(--card);
-    color: var(--text);
-
-    cursor: pointer;
-
-    font-size: 19px;
-
-    transition: .2s;
-}
-
-.icon-button:hover {
-    transform: translateY(-2px);
-}
-
-/* =========================================================
-   MAIN GRID
-========================================================= */
-
-.main-grid {
+.workspace {
     display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        minmax(320px, 430px);
-
-    gap: 20px;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
+    gap: 22px;
+    align-items: start;
 }
-
-/* =========================================================
-   CARD
-========================================================= */
 
 .card {
     background: var(--card);
-
     border-radius: 18px;
-
     padding: 22px;
-
-    box-shadow: var(--shadow);
-
-    border:
-        1px solid rgba(148, 163, 184, .15);
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.07);
 }
 
 .section-title {
-    margin-bottom: 16px;
-
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 750;
+    margin: 0 0 18px;
 }
-
-/* =========================================================
-   FORM
-========================================================= */
 
 .form-group {
     margin-bottom: 18px;
@@ -242,450 +116,881 @@ h1 {
 
 label {
     display: block;
-
     margin-bottom: 7px;
-
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
-
-    color: var(--muted);
 }
+
+.hint {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* =========================
+   Inputs
+========================= */
 
 textarea,
 input[type="text"],
+input[type="number"],
 select {
     width: 100%;
-
-    padding: 11px 12px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 9px;
-
-    background: var(--input);
+    border: 1px solid var(--border);
+    background: var(--input-bg);
     color: var(--text);
-
-    font-size: 14px;
-
+    border-radius: 10px;
+    padding: 11px 12px;
     outline: none;
-
-    transition: .2s;
+    transition: 0.2s;
 }
 
 textarea {
     min-height: 105px;
-
     resize: vertical;
-
-    line-height: 1.5;
 }
 
 textarea:focus,
-input[type="text"]:focus,
+input:focus,
 select:focus {
     border-color: var(--primary);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(37, 99, 235, .12);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
-/* =========================================================
-   COLOR
-========================================================= */
+/* =========================
+   Colors
+========================= */
 
 .color-grid {
     display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
 }
 
 .color-box {
     display: flex;
-
     align-items: center;
-
     gap: 10px;
-
-    padding: 7px 9px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 10px;
-
-    background: var(--input);
 }
 
 input[type="color"] {
-    width: 44px;
-    height: 38px;
-
-    padding: 0;
-
-    border: 0;
-
-    background: transparent;
-
+    width: 52px;
+    height: 42px;
+    padding: 3px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
     cursor: pointer;
+    background: transparent;
 }
 
-.color-code {
+.color-value {
+    flex: 1;
     font-family: monospace;
-
-    font-size: 12px;
-
-    color: var(--muted);
+    font-size: 13px;
 }
 
-/* =========================================================
-   RANGE
-========================================================= */
+/* =========================
+   Range
+========================= */
 
 .range-row {
     display: flex;
-
     align-items: center;
-
     gap: 12px;
 }
 
 input[type="range"] {
     flex: 1;
-
     accent-color: var(--primary);
-
-    cursor: pointer;
 }
 
 .range-value {
-    min-width: 55px;
+    min-width: 48px;
+    text-align: center;
+    padding: 7px 8px;
+    border-radius: 8px;
+    background: var(--preview-bg);
+    font-size: 13px;
+    font-weight: 700;
+}
 
-    text-align: right;
+/* =========================
+   Upload
+========================= */
 
+.upload-box {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.upload-box:hover {
+    border-color: var(--primary);
+    background: rgba(37, 99, 235, 0.04);
+}
+
+.upload-box strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.upload-box span {
     color: var(--muted);
-
-    font-family: monospace;
-
     font-size: 12px;
 }
 
-/* =========================================================
-   FILE
-========================================================= */
-
-.file-input {
-    width: 100%;
-
-    padding: 12px;
-
-    border:
-        1px dashed var(--border);
-
-    border-radius: 9px;
-
-    background: var(--input);
-
-    color: var(--muted);
-
-    cursor: pointer;
-
-    font-size: 13px;
+#logo-file {
+    display: none;
 }
-
-/* =========================================================
-   LOGO PREVIEW
-========================================================= */
 
 .logo-preview {
     display: none;
-
-    margin-top: 10px;
-
-    padding: 10px;
-
-    text-align: center;
-
-    border:
-        1px dashed var(--border);
-
-    border-radius: 10px;
+    margin-top: 12px;
+    align-items: center;
+    gap: 12px;
 }
 
 .logo-preview img {
-    max-width: 90px;
-    max-height: 90px;
-
+    width: 56px;
+    height: 56px;
     object-fit: contain;
-}
-
-/* =========================================================
-   CHECKBOX
-========================================================= */
-
-.checkbox-row {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    color: var(--muted);
-
-    font-size: 13px;
-}
-
-.checkbox-row input {
-    width: 17px;
-    height: 17px;
-
-    accent-color: var(--primary);
-}
-
-.checkbox-row label {
-    margin: 0;
-
-    cursor: pointer;
-}
-
-/* =========================================================
-   BUTTON
-========================================================= */
-
-.primary-button {
-    width: 100%;
-
-    padding: 13px;
-
-    border: 0;
-
+    border: 1px solid var(--border);
     border-radius: 10px;
-
-    background: var(--primary);
-
-    color: white;
-
-    font-size: 15px;
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transition: .2s;
+    background: white;
 }
 
-.primary-button:hover {
-    background: var(--primary-hover);
-
-    transform: translateY(-1px);
+.logo-info {
+    flex: 1;
+    min-width: 0;
 }
 
-.secondary-button {
-    padding: 11px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 9px;
-
-    background: var(--input);
-    color: var(--text);
-
+.logo-name {
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
+.remove-logo {
+    border: 0;
+    background: #fee2e2;
+    color: var(--danger);
+    width: auto;
+    padding: 8px 11px;
+    border-radius: 8px;
     cursor: pointer;
-
-    transition: .2s;
+    font-weight: 700;
 }
 
-.secondary-button:hover {
-    transform: translateY(-1px);
+/* =========================
+   URL Logo
+========================= */
+
+.logo-url-toggle {
+    margin-top: 10px;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
 }
 
-/* =========================================================
-   DIVIDER
-========================================================= */
-
-.divider {
-    height: 1px;
-
-    margin: 22px 0;
-
-    background: var(--border);
+.logo-url-area {
+    display: none;
+    margin-top: 10px;
 }
 
-/* =========================================================
-   PREVIEW
-========================================================= */
+/* =========================
+   Buttons
+========================= */
+
+.btn {
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-weight: 750;
+    transition: 0.2s;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.btn-secondary:hover {
+    background: #cbd5e1;
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-danger {
+    background: #fee2e2;
+    color: var(--danger);
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.button-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.action-main {
+    margin-top: 8px;
+}
+
+/* =========================
+   Preview
+========================= */
 
 .preview-card {
-    display: flex;
-
-    flex-direction: column;
+    position: sticky;
+    top: 20px;
 }
 
 .preview-area {
-    flex: 1;
-
-    min-height: 430px;
-
+    min-height: 390px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 15px;
+    background:
+        linear-gradient(45deg, #f1f5f9 25%, transparent 25%),
+        linear-gradient(-45deg, #f1f5f9 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #f1f5f9 75%),
+        linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
     display: flex;
-
-    flex-direction: column;
-
     align-items: center;
-
     justify-content: center;
-
     padding: 20px;
+}
 
-    border:
-        2px dashed var(--border);
-
-    border-radius: 14px;
-
-    background: var(--preview);
-
-    overflow: hidden;
+.qr-wrapper {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #qrcode {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 10px;
-
-    border-radius: 8px;
-
-    background: white;
-
-    box-shadow:
-        0 8px 25px
-        rgba(0, 0, 0, .08);
+    line-height: 0;
 }
 
-#qrcode canvas,
-#qrcode svg,
-#qrcode img {
-    display: block;
-
+#qrcode img,
+#qrcode canvas {
     max-width: 100%;
-
     height: auto;
 }
 
-.caption {
-    max-width: 90%;
-
-    margin-top: 12px;
-
-    text-align: center;
-
-    word-break: break-word;
-}
-
-/* =========================================================
-   INFO
-========================================================= */
-
-.info-row {
-    display: flex;
-
-    justify-content: space-between;
-
-    gap: 10px;
-
-    padding-top: 12px;
-
-    margin-top: 12px;
-
-    border-top:
-        1px solid var(--border);
-
+.empty-preview {
     color: var(--muted);
-
-    font-size: 12px;
+    text-align: center;
+    font-size: 14px;
 }
 
-.action-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 8px;
-
-    margin-top: 12px;
-}
-
-/* =========================================================
-   STATUS
-========================================================= */
+/* =========================
+   Status
+========================= */
 
 .status {
-    position: fixed;
-
-    z-index: 99999;
-
-    left: 50%;
-    bottom: 25px;
-
-    max-width: calc(100vw - 30px);
-
-    padding: 12px 18px;
-
-    border-radius: 10px;
-
-    background: #0f172a;
-
-    color: white;
-
+    margin-top: 12px;
+    min-height: 20px;
     font-size: 13px;
-
-    opacity: 0;
-
-    pointer-events: none;
-
-    transform:
-        translate(-50%, 100px);
-
-    transition: .3s;
-
-    box-shadow:
-        0 10px 25px
-        rgba(0, 0, 0, .25);
-}
-
-.status.show {
-    opacity: 1;
-
-    transform:
-        translate(-50%, 0);
+    text-align: center;
 }
 
 .status.error {
-    background: #b91c1c;
+    color: var(--danger);
 }
 
 .status.success {
-    background: #15803d;
+    color: var(--success);
 }
 
-/* =========================================================
-   LOADING
-========================================================= */
+/* =========================
+   Footer
+========================= */
 
-.loading-box {
+.footer {
     text-align: center;
-
     color: var(--muted);
+    font-size: 12px;
+    margin-top: 22px;
+}
+
+/* =========================
+   Dark Mode
+========================= */
+
+body.dark {
+    --bg: #020617;
+    --card: #0f172a;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --border: #334155;
+    --input-bg: #111827;
+    --preview-bg: #1e293b;
+}
+
+body.dark .btn-secondary {
+    background: #334155;
+    color: white;
+}
+
+body.dark .upload-box:hover {
+    background: rgba(59, 130, 246, 0.08);
+}
+
+body.dark .qr-wrapper {
+    background: white;
+}
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 850px) {
+
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-card {
+        position: static;
+    }
+
+    .preview-area {
+        min-height: 330px;
+    }
+}
+
+@media (max-width: 520px) {
+
+    .app {
+        padding: 12px;
+    }
+
+    .card {
+        padding: 17px;
+        border-radius: 15px;
+    }
+
+    .color-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        margin-bottom: 16px;
+    }
+
+    .preview-area {
+        min-height: 290px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="header">
+        <h1>🔳 QR Code Customizer</h1>
+        <p>สร้าง QR Code ปรับแต่งได้ พร้อมดาวน์โหลดและแชร์</p>
+    </header>
+
+    <main class="workspace">
+
+        <!-- =========================
+             SETTINGS
+        ========================== -->
+
+        <section class="card">
+
+            <h2 class="section-title">⚙️ ตั้งค่า QR Code</h2>
+
+            <!-- Text -->
+            <div class="form-group">
+
+                <label for="text-input">
+                    🔗 ลิงก์เว็บไซต์ หรือข้อความ
+                </label>
+
+                <textarea
+                    id="text-input"
+                    maxlength="2000"
+                    placeholder="วาง URL หรือพิมพ์ข้อความ..."
+                >https://www.google.com</textarea>
+
+                <div class="hint">
+                    รองรับ URL ข้อความ เบอร์โทร อีเมล และข้อมูลทั่วไป
+                </div>
+
+            </div>
+
+            <!-- Colors -->
+            <div class="form-group">
+
+                <label>🎨 สี QR Code</label>
+
+                <div class="color-grid">
+
+                    <div class="color-box">
+
+                        <input
+                            type="color"
+                            id="dot-color"
+                            value="#0f172a"
+                        >
+
+                        <input
+                            type="text"
+                            id="dot-color-text"
+                            class="color-value"
+                            value="#0f172a"
+                            maxlength="7"
+                        >
+
+                    </div>
+
+                    <div class="color-box">
+
+                        <input
+                            type="color"
+                            id="bg-color"
+                            value="#ffffff"
+                        >
+
+                        <input
+                            type="text"
+                            id="bg-color-text"
+                            class="color-value"
+                            value="#ffffff"
+                            maxlength="7"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- QR Size -->
+            <div class="form-group">
+
+                <label for="qr-size">
+                    📐 ขนาด QR Code
+                </label>
+
+                <div class="range-row">
+
+                    <input
+                        type="range"
+                        id="qr-size"
+                        min="160"
+                        max="500"
+                        step="10"
+                        value="280"
+                    >
+
+                    <div class="range-value">
+                        <span id="qr-size-value">280</span> px
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Error Correction -->
+            <div class="form-group">
+
+                <label for="error-level">
+                    🛡️ ระดับการแก้ไขข้อผิดพลาด
+                </label>
+
+                <select id="error-level">
+
+                    <option value="L">
+                        L — ประมาณ 7%
+                    </option>
+
+                    <option value="M">
+                        M — ประมาณ 15%
+                    </option>
+
+                    <option value="Q">
+                        Q — ประมาณ 25%
+                    </option>
+
+                    <option value="H" selected>
+                        H — ประมาณ 30% (แนะนำเมื่อใช้โลโก้)
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- Logo -->
+            <div class="form-group">
+
+                <label>🖼️ โลโก้ตรงกลาง</label>
+
+                <label
+                    class="upload-box"
+                    for="logo-file"
+                >
+
+                    <strong>📁 เลือกรูปจากเครื่อง</strong>
+
+                    <span>
+                        PNG / JPG / WEBP
+                    </span>
+
+                </label>
+
+                <input
+                    type="file"
+                    id="logo-file"
+                    accept="image/png,image/jpeg,image/webp"
+                >
+
+                <div
+                    class="logo-preview"
+                    id="logo-preview"
+                >
+
+                    <img
+                        id="logo-preview-img"
+                        alt="Logo Preview"
+                    >
+
+                    <div class="logo-info">
+
+                        <div
+                            class="logo-name"
+                            id="logo-name"
+                        ></div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="remove-logo"
+                        id="remove-logo"
+                    >
+                        ลบ
+                    </button>
+
+                </div>
+
+                <div
+                    class="logo-url-toggle"
+                    id="logo-url-toggle"
+                >
+                    หรือใช้ URL รูปภาพ
+                </div>
+
+                <div
+                    class="logo-url-area"
+                    id="logo-url-area"
+                >
+
+                    <input
+                        type="text"
+                        id="logo-input"
+                        placeholder="https://example.com/logo.png"
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- Logo Size -->
+            <div class="form-group">
+
+                <label for="logo-size">
+                    🧩 ขนาดโลโก้
+                </label>
+
+                <div class="range-row">
+
+                    <input
+                        type="range"
+                        id="logo-size"
+                        min="30"
+                        max="120"
+                        step="5"
+                        value="60"
+                    >
+
+                    <div class="range-value">
+                        <span id="logo-size-value">60</span> px
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Caption -->
+            <div class="form-group">
+
+                <label for="caption">
+                    ✏️ ข้อความใต้ QR Code
+                </label>
+
+                <input
+                    type="text"
+                    id="caption"
+                    maxlength="100"
+                    placeholder="เช่น SCAN ME"
+                >
+
+            </div>
+
+            <!-- Buttons -->
+
+            <div class="button-grid">
+
+                <button
+                    type="button"
+                    class="btn btn-primary action-main"
+                    id="generate-btn"
+                >
+                    🔄 สร้าง QR Code
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary action-main"
+                    id="reset-btn"
+                >
+                    ↩️ รีเซ็ต
+                </button>
+
+            </div>
+
+            <div class="button-grid-3" style="margin-top:10px;">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="dark-btn"
+                >
+                    🌙 ธีม
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="copy-btn"
+                >
+                    📋 Copy
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-success"
+                    id="share-btn"
+                >
+                    📤 แชร์
+                </button>
+
+            </div>
+
+            <div
+                id="status"
+                class="status"
+                aria-live="polite"
+            ></div>
+
+        </section>
+
+
+        <!-- =========================
+             PREVIEW
+        ========================== -->
+
+        <section class="card preview-card">
+
+            <h2 class="section-title">
+                👁️ ตัวอย่าง
+            </h2>
+
+            <div class="preview-area">
+
+                <div class="qr-wrapper">
+
+                    <div id="qrcode">
+
+                        <div class="empty-preview">
+                            QR Code จะแสดงที่นี่
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Download -->
+
+            <div
+                class="button-grid"
+                style="margin-top:14px;"
+            >
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="download-png"
+                >
+                    🖼️ PNG
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="download-svg"
+                >
+                    🧩 SVG
+                </button>
+
+            </div>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="download-pdf"
+                style="margin-top:10px;"
+            >
+                📄 พิมพ์ / บันทึกเป็น PDF
+            </button>
+
+            <div class="hint" style="text-align:center;margin-top:12px;">
+                แนะนำให้ทดสอบสแกน QR ก่อนนำไปใช้งานจริง
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        QR Code Customizer V2 • ทำงานบนเบราว์เซอร์ของคุณ
+    </footer>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   QR CODE CUSTOMIZER V2
+   ========================================================= */
+
+"use strict";
+
+
+/* =========================================================
+   DOM
+   ========================================================= */
+
+const $ = id => document.getElementById(id);
+
+const textInput       = $("text-input");
+
+const dotColor        = $("dot-color");
+const dotColorText    = $("dot-color-text");
+
+const bgColor         = $("bg-color");
+const bgColorText     = $("bg-color-text");
+
+const qrSize          = $("qr-size");
+const qrSizeValue     = $("qr-size-value");
+
+const errorLevel      = $("error-level");
+
+const logoFile        = $("logo-file");
+const logoPreview     = $("logo-preview");
+const logoPreviewImg  = $("logo-preview-img");
+const logoName        = $("logo-name");
+const removeLogo      = $("remove-logo");
+
+const logoUrlToggle    = $("logo-url-toggle");
+const logoUrlArea      = $("logo-url-area");
+const logoInput        = $("logo-input");
+
+const logoSize         = $("logo-size");
+const logoSizeValue    = $("logo-size-value");
+
+const caption          = $("caption");
+
+const generateBtn      = $("generate-btn");
+const resetBtn         = $("reset-btn");
+const darkBtn          = $("dark-btn");
+const copyBtn          = $("copy-btn");
+const shareBtn         = $("share-btn");
+
+const downloadPng     = $("download-png");
+const downloadSvg     = $("download-svg");
+const downloadPdf     = $("download-pdf");
+
+const qrContainer      = $("qrcode");
+const statusBox        = $("status");
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let uploadedLogoData = "";
+let lastQrCanvas = null;
+let lastQrImage = null;
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+function setStatus(message, type = "") {
+
+    statusBox.textContent = message;
+
+    statusBox.className = "status";
+
+    if (type) {
+        statusBox.clasหted);
 
     font-size: 13px;
 
