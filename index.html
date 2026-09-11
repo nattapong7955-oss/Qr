@@ -1,40 +1,1221 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom QR Code Generator</title>
-    <!-- เรียกใช้ easyqrcodejs เวอร์ชันที่รองรับการปรับแต่งสีและใส่โลโก้ -->
-    <script src="https://cdn.jsdelivr.net/npm/easyqrcodejs@4.4.1/dist/easy.qrcode.min.js"></script>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f1f5f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 450px;
-            box-sizing: border-box;
-        }
-        h2 { text-align: center; color: #0f172a; margin-top: 0; margin-bottom: 25px; }
-        .form-group {
-            margin-bottom: 18px;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #475569;
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<meta name="theme-color" content="#2563eb">
+
+<title>QR Code Customizer V2</title>
+
+<!-- EasyQRCodeJS -->
+<script src="https://cdn.jsdelivr.net/npm/easyqrcodejs@4.4.1/dist/easy.qrcode.min.js"></script>
+
+<!-- QR Generator สำหรับ SVG -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #cbd5e1;
+    --input-bg: #ffffff;
+    --preview-bg: #f8fafc;
+    --danger: #dc2626;
+    --success: #16a34a;
+}
+
+body.dark {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --border: #475569;
+    --input-bg: #0f172a;
+    --preview-bg: #111827;
+}
+
+body {
+    font-family:
+        "Segoe UI",
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    padding: 20px;
+
+    transition:
+        background .25s,
+        color .25s;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--primary);
+
+    color: white;
+
+    border-radius: 14px;
+
+    font-size: 25px;
+
+    box-shadow:
+        0 8px 20px rgba(37,99,235,.25);
+}
+
+h1 {
+    margin: 0;
+
+    font-size: 23px;
+}
+
+.subtitle {
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* =========================
+   ICON BUTTON
+========================= */
+
+.icon-btn {
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid var(--border);
+
+    background: var(--card);
+
+    color: var(--text);
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    transition: .2s;
+}
+
+.icon-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================
+   GRID
+========================= */
+
+.main-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(320px, 420px);
+
+    gap: 20px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.card {
+    background: var(--card);
+
+    border-radius: 18px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.06);
+
+    border: 1px solid rgba(148,163,184,.15);
+}
+
+.section-title {
+    font-size: 16px;
+
+    font-weight: 700;
+
+    margin-bottom: 16px;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: var(--muted);
+}
+
+textarea,
+input[type="text"],
+input[type="number"],
+select {
+
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border: 1px solid var(--border);
+
+    background: var(--input-bg);
+
+    color: var(--text);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition: .2s;
+}
+
+textarea {
+    min-height: 100px;
+
+    resize: vertical;
+
+    line-height: 1.5;
+}
+
+textarea:focus,
+input:focus,
+select:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.12);
+}
+
+/* =========================
+   COLOR
+========================= */
+
+.color-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.color-box {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    padding: 8px;
+
+    background: var(--input-bg);
+}
+
+input[type="color"] {
+    width: 42px;
+
+    height: 38px;
+
+    border: none;
+
+    padding: 0;
+
+    background: transparent;
+
+    cursor: pointer;
+}
+
+.color-value {
+    font-family: monospace;
+
+    font-size: 13px;
+
+    color: var(--muted);
+}
+
+/* =========================
+   RANGE
+========================= */
+
+.range-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+input[type="range"] {
+    flex: 1;
+
+    accent-color: var(--primary);
+
+    cursor: pointer;
+}
+
+.range-value {
+    min-width: 50px;
+
+    text-align: right;
+
+    font-size: 13px;
+
+    font-family: monospace;
+
+    color: var(--muted);
+}
+
+/* =========================
+   CHECKBOX
+========================= */
+
+.checkbox-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 10px;
+
+    font-size: 13px;
+
+    color: var(--muted);
+}
+
+.checkbox-row input {
+    width: 17px;
+    height: 17px;
+
+    accent-color: var(--primary);
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.logo-preview {
+    display: none;
+
+    margin-top: 10px;
+
+    padding: 10px;
+
+    border: 1px dashed var(--border);
+
+    border-radius: 10px;
+
+    text-align: center;
+}
+
+.logo-preview img {
+    max-width: 80px;
+
+    max-height: 80px;
+
+    object-fit: contain;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+button {
+    font-family: inherit;
+}
+
+.primary-btn {
+
+    width: 100%;
+
+    border: none;
+
+    background: var(--primary);
+
+    color: white;
+
+    padding: 13px;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.primary-btn:hover {
+    background: var(--primary-hover);
+
+    transform: translateY(-1px);
+}
+
+.secondary-btn {
+
+    border: 1px solid var(--border);
+
+    background: var(--input-bg);
+
+    color: var(--text);
+
+    padding: 11px 13px;
+
+    border-radius: 9px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.secondary-btn:hover {
+    transform: translateY(-1px);
+}
+
+.button-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 10px;
+}
+
+.button-grid button {
+    font-size: 13px;
+}
+
+/* =========================
+   PREVIEW
+========================= */
+
+.preview-card {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.preview-area {
+
+    flex: 1;
+
+    min-height: 430px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    background: var(--preview-bg);
+
+    border: 2px dashed var(--border);
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    overflow: hidden;
+}
+
+#qrcode {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: white;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.08);
+}
+
+#qrcode canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+.qr-caption {
+
+    margin-top: 12px;
+
+    text-align: center;
+
+    word-break: break-word;
+
+    max-width: 90%;
+}
+
+/* =========================
+   INFO
+========================= */
+
+.info-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 14px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid var(--border);
+
+    font-size: 12px;
+
+    color: var(--muted);
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 25px;
+
+    transform:
+        translate(-50%, 120px);
+
+    background: #0f172a;
+
+    color: white;
+
+    padding: 12px 18px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+
+    z-index: 9999;
+
+    opacity: 0;
+
+    transition: .3s;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.25);
+}
+
+.status.show {
+
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0);
+}
+
+/* =========================
+   DIVIDER
+========================= */
+
+.divider {
+
+    height: 1px;
+
+    background: var(--border);
+
+    margin: 22px 0;
+}
+
+/* =========================
+   FILE
+========================= */
+
+.file-input {
+
+    width: 100%;
+
+    border: 1px dashed var(--border);
+
+    padding: 12px;
+
+    border-radius: 9px;
+
+    background: var(--input-bg);
+
+    color: var(--muted);
+
+    cursor: pointer;
+
+    font-size: 13px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 850px) {
+
+    .main-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .preview-card {
+        order: -1;
+    }
+
+    .preview-area {
+        min-height: 350px;
+    }
+}
+
+@media (max-width: 500px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .card {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    h1 {
+        font-size: 19px;
+    }
+
+    .subtitle {
+        font-size: 11px;
+    }
+
+    .color-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .header {
+        align-items: flex-start;
+    }
+
+    .logo-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 21px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="logo-title">
+
+            <div class="logo-icon">
+                ▦
+            </div>
+
+            <div>
+                <h1>QR Code Customizer</h1>
+
+                <div class="subtitle">
+                    สร้าง QR Code สวย ๆ ได้ในไม่กี่วินาที
+                </div>
+            </div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button
+                class="icon-btn"
+                onclick="toggleDarkMode()"
+                title="โหมดกลางคืน"
+                id="themeBtn">
+                🌙
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="main-grid">
+
+
+        <!-- =========================
+             PREVIEW
+        ========================== -->
+
+        <div class="card preview-card">
+
+            <div class="section-title">
+                ตัวอย่าง QR Code
+            </div>
+
+            <div class="preview-area">
+
+                <div id="qrcode"></div>
+
+                <div
+                    id="qrCaption"
+                    class="qr-caption">
+                </div>
+
+            </div>
+
+            <div class="info-row">
+
+                <span id="charCount">
+                    0 ตัวอักษร
+                </span>
+
+                <span id="qrSizeInfo">
+                    300 × 300 px
+                </span>
+
+            </div>
+
+            <div class="button-grid">
+
+                <button
+                    class="primary-btn"
+                    onclick="downloadPNG()">
+                    PNG
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="downloadSVG()">
+                    SVG
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="copyQR()">
+                    Copy
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="shareQR()">
+                    Share
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="printQR()">
+                    พิมพ์
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="resetSettings()">
+                    Reset
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             SETTINGS
+        ========================== -->
+
+        <div class="card">
+
+            <div class="section-title">
+                ตั้งค่า QR Code
+            </div>
+
+
+            <!-- DATA -->
+
+            <div class="form-group">
+
+                <label for="text-input">
+                    ลิงก์เว็บไซต์ หรือข้อความ
+                </label>
+
+                <textarea
+                    id="text-input"
+                    placeholder="วาง URL หรือพิมพ์ข้อความที่ต้องการ...">https://www.google.com</textarea>
+
+            </div>
+
+
+            <!-- COLOR -->
+
+            <div class="form-group">
+
+                <label>
+                    สี QR Code
+                </label>
+
+                <div class="color-grid">
+
+                    <div class="color-box">
+
+                        <input
+                            type="color"
+                            id="dot-color"
+                            value="#0f172a">
+
+                        <span
+                            id="dot-color-value"
+                            class="color-value">
+                            #0f172a
+                        </span>
+
+                    </div>
+
+
+                    <div class="color-box">
+
+                        <input
+                            type="color"
+                            id="bg-color"
+                            value="#ffffff">
+
+                        <span
+                            id="bg-color-value"
+                            class="color-value">
+                            #ffffff
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QR SIZE -->
+
+            <div class="form-group">
+
+                <label>
+                    ขนาด QR Code
+                </label>
+
+                <div class="range-row">
+
+                    <input
+                        type="range"
+                        id="qr-size"
+                        min="150"
+                        max="800"
+                        value="300">
+
+                    <span
+                        class="range-value"
+                        id="qr-size-value">
+                        300px
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ERROR CORRECTION -->
+
+            <div class="form-group">
+
+                <label for="error-level">
+                    ระดับ Error Correction
+                </label>
+
+                <select id="error-level">
+
+                    <option value="L">
+                        L — ประมาณ 7%
+                    </option>
+
+                    <option value="M">
+                        M — ประมาณ 15%
+                    </option>
+
+                    <option value="Q">
+                        Q — ประมาณ 25%
+                    </option>
+
+                    <option value="H" selected>
+                        H — ประมาณ 30%
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="divider"></div>
+
+
+            <!-- LOGO -->
+
+            <div class="section-title">
+                โลโก้ตรงกลาง
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    อัปโหลดโลโก้จากเครื่อง
+                </label>
+
+                <input
+                    type="file"
+                    id="logo-file"
+                    class="file-input"
+                    accept="image/png,image/jpeg,image/webp">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="logo-input">
+                    หรือใส่ URL รูปภาพ
+                </label>
+
+                <input
+                    type="text"
+                    id="logo-input"
+                    placeholder="https://example.com/logo.png">
+
+            </div>
+
+
+            <div
+                id="logo-preview"
+                class="logo-preview">
+
+                <img id="logo-preview-img">
+
+            </div>
+
+
+            <!-- LOGO SIZE -->
+
+            <div class="form-group">
+
+                <label>
+                    ขนาดโลโก้
+                </label>
+
+                <div class="range-row">
+
+                    <input
+                        type="range"
+                        id="logo-size"
+                        min="20"
+                        max="140"
+                        value="60">
+
+                    <span
+                        class="range-value"
+                        id="logo-size-value">
+                        60px
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="checkbox-row">
+
+                <input
+                    type="checkbox"
+                    id="logo-background"
+                    checked>
+
+                <label
+                    for="logo-background"
+                    style="margin:0">
+
+                    ให้มีพื้นหลังสีขาวรอบโลโก้
+
+                </label>
+
+            </div>
+
+
+            <div class="divider"></div>
+
+
+            <!-- CAPTION -->
+
+            <div class="section-title">
+                ข้อความใต้ QR
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="caption-input">
+                    ข้อความ
+                </label>
+
+                <input
+                    type="text"
+                    id="caption-input"
+                    placeholder="เช่น SCAN ME">
+
+            </div>
+
+
+            <div class="color-grid">
+
+                <div>
+
+                    <label>
+                        สีข้อความ
+                    </label>
+
+                    <div class="color-box">
+
+                        <input
+                            type="color"
+                            id="caption-color"
+                            value="#0f172a">
+
+                        <span
+                            id="caption-color-value"
+                            class="color-value">
+                            #0f172a
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        ขนาดข้อความ
+                    </label>
+
+                    <div class="range-row">
+
+                        <input
+                            type="range"
+                            id="caption-size"
+                            min="10"
+                            max="40"
+                            value="18">
+
+                        <span
+                            class="range-value"
+                            id="caption-size-value">
+                            18px
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                style="margin-top:20px"
+                onclick="generateCustomQR()">
+
+                สร้าง QR Code
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- STATUS -->
+
+<div
+    id="status"
+    class="status">
+</div>
+
+
+<script>
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+let currentLogoData = "";
+
+let currentQRCanvas = null;
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const textInput =
+    document.getElementById("text-input");
+
+const dotColor =
+    document.getElementById("dot-color");
+
+const bgColor =
+    document.getElementById("bg-color");
+
+const logoInput =
+    document.getElementById("logo-input");
+
+const logoFile =
+    document.getElementById("logo-file");
+
+const qrSize =
+    document.getElementById("qr-size");
+
+const logoSize =
+    document.getElementById("logo-size");
+
+const errorLevel =
+    document.getElementById("error-level");
+
+const captionInput =
+    document.getElementById("caption-input");
+
+const captionColor =
+    document.getElementById("caption-color");
+
+const captionSize =
+    document.getElementById("caption-size");
+
+const logoBackground =
+    document.getElementById("logo-background");
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+let statusTimer;
+
+function showStatus(message) {
+
+    const status =
+        document.getElementById("status");
+
+    status.textContent = message;
+
+    status.cl            color: #475569;
             font-size: 14px;
         }
         textarea, input[type="text"] {
