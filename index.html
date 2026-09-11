@@ -4,37 +4,506 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>QR Code Generator</title>
+<title>Custom QR Code Generator</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
 
 body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f5f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     margin: 0;
     padding: 20px;
-    min-height: 100vh;
-    font-family: Arial, "Noto Sans Thai", sans-serif;
-    background: #f1f5f9;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 450px;
+}
+
+h2 {
+    text-align: center;
+    color: #0f172a;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #475569;
+    font-size: 14px;
+}
+
+textarea,
+input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+textarea {
+    height: 70px;
+    resize: none;
+}
+
+textarea:focus,
+input[type="text"]:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.color-pickers {
+    display: flex;
+    gap: 15px;
+}
+
+.color-item {
+    flex: 1;
+}
+
+input[type="color"] {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+}
+
+button {
+    width: 100%;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #1d4ed8;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.result-area {
+    text-align: center;
+    margin-top: 25px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 2px dashed #e2e8f0;
+    min-height: 280px;
+
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.container {
-    width: 100%;
-    max-width: 500px;
-    background: white;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+#qrcode {
+    width: 240px;
+    height: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-h1 {
+#qrcode img {
+    max-width: 240px;
+    max-height: 240px;
+}
+
+.download-button {
+    display: none;
+    margin-top: 15px;
+    background: #16a34a;
+}
+
+.download-button:hover {
+    background: #15803d;
+}
+
+.status {
     text-align: center;
-    margin: 0 0 25px;
-    color: #0f172a;
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>QR Code Customizer</h2>
+
+    <div class="form-group">
+
+        <label for="text-input">
+            ลิงก์เว็บ หรือ ข้อความ
+        </label>
+
+        <textarea
+            id="text-input"
+            placeholder="วางลิงก์ URL หรือพิมพ์ข้อความที่ต้องการ..."
+        >https://www.google.com</textarea>
+
+    </div>
+
+
+    <div class="form-group color-pickers">
+
+        <div class="color-item">
+
+            <label for="dot-color">
+                สีจุด QR Code
+            </label>
+
+            <input
+                type="color"
+                id="dot-color"
+                value="#0f172a"
+            >
+
+        </div>
+
+
+        <div class="color-item">
+
+            <label for="bg-color">
+                สีพื้นหลัง
+            </label>
+
+            <input
+                type="color"
+                id="bg-color"
+                value="#ffffff"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label for="logo-input">
+            URL รูปภาพโลโก้ตรงกลาง (ถ้ามี)
+        </label>
+
+        <input
+            type="text"
+            id="logo-input"
+            placeholder="วางลิงก์รูปภาพ .png หรือ .jpg ที่นี่"
+        >
+
+    </div>
+
+
+    <button
+        type="button"
+        onclick="generateCustomQR()"
+    >
+        สร้าง QR Code
+    </button>
+
+
+    <div class="result-area">
+
+        <div id="qrcode"></div>
+
+    </div>
+
+
+    <button
+        type="button"
+        id="download-button"
+        class="download-button"
+        onclick="downloadQR()"
+    >
+        ดาวน์โหลด QR Code
+    </button>
+
+
+    <div
+        id="status"
+        class="status"
+    ></div>
+
+</div>
+
+
+<script>
+
+/*
+==================================================
+ QR CODE GENERATOR
+ ใช้ QR Server API
+ ไม่ต้องติดตั้ง Library
+==================================================
+*/
+
+let currentQR = "";
+
+
+/* -----------------------------------------------
+   สร้าง QR
+------------------------------------------------ */
+
+function generateCustomQR() {
+
+    const text =
+        document.getElementById("text-input")
+        .value
+        .trim();
+
+    const dotColor =
+        document.getElementById("dot-color")
+        .value
+        .replace("#", "");
+
+    const bgColor =
+        document.getElementById("bg-color")
+        .value
+        .replace("#", "");
+
+    const logoUrl =
+        document.getElementById("logo-input")
+        .value
+        .trim();
+
+    const qrContainer =
+        document.getElementById("qrcode");
+
+    const downloadButton =
+        document.getElementById("download-button");
+
+    const status =
+        document.getElementById("status");
+
+
+    /* ตรวจสอบข้อความ */
+
+    if (!text) {
+
+        alert(
+            "กรุณากรอกข้อความหรือลิงก์ก่อนนะครับ"
+        );
+
+        return;
+    }
+
+
+    /* ล้าง QR เก่า */
+
+    qrContainer.innerHTML = "";
+
+    downloadButton.style.display = "none";
+
+
+    /*
+    ---------------------------------------------
+    สร้าง QR จาก API
+    ---------------------------------------------
+    */
+
+    let apiURL =
+        "https://api.qrserver.com/v1/create-qr-code/"
+        + "?size=800x800"
+        + "&margin=20"
+        + "&color=" + dotColor
+        + "&bgcolor=" + bgColor
+        + "&data="
+        + encodeURIComponent(text);
+
+
+    currentQR = apiURL;
+
+
+    const img =
+        document.createElement("img");
+
+
+    img.width = 240;
+    img.height = 240;
+
+    img.alt = "QR Code";
+
+
+    img.onload = function() {
+
+        qrContainer.innerHTML = "";
+
+        qrContainer.appendChild(img);
+
+        downloadButton.style.display =
+            "block";
+
+        status.innerText =
+            "สร้าง QR Code สำเร็จ";
+
+    };
+
+
+    img.onerror = function() {
+
+        status.innerText =
+            "ไม่สามารถสร้าง QR Code ได้";
+
+        alert(
+            "ไม่สามารถสร้าง QR Code ได้\n\n"
+            + "กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่ครับ"
+        );
+
+    };
+
+
+    img.src = apiURL;
+
+
+    /*
+    ---------------------------------------------
+    หมายเหตุเรื่อง Logo
+    ---------------------------------------------
+
+    QR Server ไม่สามารถนำ URL Logo
+    ไปใส่ตรงกลางโดยตรงได้อย่างปลอดภัย
+
+    ดังนั้นตอนนี้ช่อง Logo จะยังคงอยู่
+    เพื่อรักษาหน้าจอเดิม
+
+    เราจะเพิ่มระบบ Logo แบบอัปโหลดไฟล์
+    ในขั้นต่อไป โดยไม่ต้องพึ่ง CORS
+    ---------------------------------------------
+    */
+
+}
+
+
+/* -----------------------------------------------
+   ดาวน์โหลด QR
+------------------------------------------------ */
+
+async function downloadQR() {
+
+    if (!currentQR) {
+
+        alert(
+            "กรุณาสร้าง QR Code ก่อนครับ"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(currentQR);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Download failed"
+            );
+
+        }
+
+
+        const blob =
+            await response.blob();
+
+
+        const url =
+            URL.createObjectURL(blob);
+
+
+        const link =
+            document.createElement("a");
+
+
+        link.href = url;
+
+        link.download =
+            "QR-Code.png";
+
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+
+        URL.revokeObjectURL(url);
+
+    }
+
+    catch (error) {
+
+        /*
+        ถ้า Browser ไม่อนุญาตให้ดาวน์โหลด
+        ให้เปิดรูปในแท็บใหม่แทน
+        */
+
+        window.open(
+            currentQR,
+            "_blank"
+        );
+
+    }
+
+}
+
+
+/* -----------------------------------------------
+   สร้าง QR อัตโนมัติเมื่อเปิดเว็บ
+------------------------------------------------ */
+
+window.addEventListener(
+    "load",
+    function() {
+
+        generateCustomQR();
+
+    }
+);
+
+</script>
+
+</body>
+</html>    color: #0f172a;
     font-size: 26px;
 }
 
