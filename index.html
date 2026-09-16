@@ -1,3110 +1,499 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<meta name="theme-color"
-content="#4f46e5">
-
-<title>QR Code Studio</title>
+<title>QR Code Generator</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
+* {
+  box-sizing: border-box;
 }
 
-body{
-    margin:0;
-    min-height:100vh;
-
-    font-family:
-        "Segoe UI",
-        "Noto Sans Thai",
-        Arial,
-        sans-serif;
-
-    background:
-        radial-gradient(
-            circle at 10% 10%,
-            rgba(99,102,241,.15),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 90% 90%,
-            rgba(37,99,235,.12),
-            transparent 30%
-        ),
-        #f5f7fb;
-
-    color:#172033;
-
-    padding:20px;
+body {
+  margin: 0;
+  font-family: Arial, "Noto Sans Thai", sans-serif;
+  background: #f4f7fb;
+  color: #1f2937;
 }
 
-
-/* =========================================
-   APP
-========================================= */
-
-.app{
-    max-width:1100px;
-    margin:auto;
-
-    background:white;
-
-    border-radius:26px;
-
-    overflow:hidden;
-
-    box-shadow:
-        0 25px 70px rgba(15,23,42,.12);
+.container {
+  width: min(900px, 94%);
+  margin: 40px auto;
 }
 
-
-/* =========================================
-   HEADER
-========================================= */
-
-.header{
-
-    padding:24px 30px;
-
-    color:white;
-
-    background:
-        linear-gradient(
-            135deg,
-            #6366f1,
-            #2563eb
-        );
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
+.header {
+  text-align: center;
+  margin-bottom: 25px;
 }
 
-.brand{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:13px;
+.header h1 {
+  margin: 0;
+  font-size: 32px;
+  color: #111827;
 }
 
-.icon{
-
-    width:50px;
-    height:50px;
-
-    border-radius:15px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-weight:900;
-
-    background:
-        rgba(255,255,255,.18);
+.header p {
+  margin-top: 8px;
+  color: #6b7280;
 }
 
-.brand h1{
-
-    margin:0;
-
-    font-size:23px;
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
 }
 
-.brand p{
-
-    margin:4px 0 0;
-
-    font-size:12px;
-
-    opacity:.85;
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
-
-.version{
-
-    font-size:11px;
-
-    padding:7px 10px;
-
-    border-radius:20px;
-
-    background:
-        rgba(255,255,255,.15);
-}
-
-
-/* =========================================
-   MAIN
-========================================= */
-
-.main{
-
-    display:grid;
-
-    grid-template-columns:
-        1fr 400px;
-}
-
-
-/* =========================================
-   EDITOR
-========================================= */
-
-.editor{
-
-    padding:30px;
-}
-
-.section{
-
-    margin-bottom:22px;
-}
-
-.title{
-
-    font-size:15px;
-
-    font-weight:800;
-
-    color:#1e293b;
-
-    margin-bottom:10px;
-}
-
-label{
-
-    display:block;
-
-    font-size:13px;
-
-    font-weight:700;
-
-    color:#475569;
-
-    margin-bottom:7px;
-}
-
-
-/* =========================================
-   INPUT
-========================================= */
 
 textarea,
 input[type="text"],
-select{
-
-    width:100%;
-
-    padding:12px;
-
-    border:1px solid #dbe2ea;
-
-    border-radius:11px;
-
-    background:#f8fafc;
-
-    color:#172033;
-
-    font-family:inherit;
-
-    font-size:14px;
-
-    outline:none;
-
-    transition:.2s;
+input[type="number"] {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 13px;
+  font-size: 16px;
+  outline: none;
 }
 
-textarea{
-
-    height:100px;
-
-    resize:vertical;
+textarea {
+  min-height: 120px;
+  resize: vertical;
 }
 
 textarea:focus,
-input[type="text"]:focus,
-select:focus{
-
-    background:white;
-
-    border-color:#6366f1;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(99,102,241,.10);
+input:focus {
+  border-color: #2563eb;
 }
 
-
-/* =========================================
-   COLOR
-========================================= */
-
-.grid{
-
-    display:grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap:12px;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 20px;
 }
 
-.color-card{
-
-    padding:12px;
-
-    background:#f8fafc;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:12px;
+.field {
+  margin-bottom: 5px;
 }
 
-.color-row{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
+.color-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
-input[type="color"]{
-
-    width:48px;
-
-    height:38px;
-
-    padding:2px;
-
-    border:1px solid #cbd5e1;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
-    background:white;
+input[type="color"] {
+  width: 55px;
+  height: 45px;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
 }
 
-.hex{
-
-    font-family:monospace;
-
-    color:#64748b;
-
-    font-size:12px;
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-
-/* =========================================
-   RANGE
-========================================= */
-
-.range-row{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
+.generate {
+  width: 100%;
+  margin-top: 25px;
+  background: #2563eb;
+  color: white;
 }
 
-input[type="range"]{
-
-    flex:1;
-
-    accent-color:#4f46e5;
+.generate:hover {
+  background: #1d4ed8;
 }
 
-.range-value{
-
-    min-width:45px;
-
-    text-align:center;
-
-    color:#4f46e5;
-
-    font-weight:800;
-
-    font-size:12px;
+.result {
+  margin-top: 25px;
+  text-align: center;
+  padding: 25px;
+  background: #f8fafc;
+  border-radius: 16px;
 }
 
-
-/* =========================================
-   LOGO
-========================================= */
-
-.logo-box{
-
-    padding:15px;
-
-    border:2px dashed #cbd5e1;
-
-    border-radius:13px;
-
-    background:#f8fafc;
-
-    text-align:center;
+#qrImage {
+  display: block;
+  max-width: 100%;
+  width: 350px;
+  margin: auto;
+  background: white;
+  padding: 10px;
+  border-radius: 12px;
 }
 
-.logo-box input{
-
-    width:100%;
-
-    font-size:12px;
+.download {
+  display: inline-block;
+  margin-top: 20px;
+  background: #16a34a;
+  color: white;
+  text-decoration: none;
+  padding: 14px 25px;
+  border-radius: 12px;
+  font-weight: bold;
 }
 
-.logo-preview{
-
-    display:none;
-
-    width:70px;
-
-    height:70px;
-
-    margin:12px auto 0;
-
-    object-fit:contain;
-
-    padding:5px;
-
-    border-radius:10px;
-
-    background:white;
-
-    border:1px solid #e2e8f0;
+.download:hover {
+  background: #15803d;
 }
 
-
-/* =========================================
-   GENERATE
-========================================= */
-
-.generate{
-
-    width:100%;
-
-    padding:15px;
-
-    border:0;
-
-    border-radius:13px;
-
-    color:white;
-
-    font-size:15px;
-
-    font-weight:800;
-
-    cursor:pointer;
-
-    background:
-        linear-gradient(
-            135deg,
-            #6366f1,
-            #2563eb
-        );
-
-    box-shadow:
-        0 8px 20px
-        rgba(37,99,235,.22);
+.status {
+  margin-top: 12px;
+  color: #6b7280;
+  font-size: 14px;
 }
 
-.generate:disabled{
-
-    opacity:.65;
-
-    cursor:wait;
+.logo-preview {
+  display: none;
+  max-width: 80px;
+  max-height: 80px;
+  margin-top: 10px;
 }
 
-
-/* =========================================
-   PREVIEW
-========================================= */
-
-.preview{
-
-    padding:30px;
-
-    background:
-        linear-gradient(
-            180deg,
-            #f8faff,
-            #eef3ff
-        );
-
-    border-left:
-        1px solid #e5e7eb;
+.footer {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+  margin-top: 20px;
 }
 
-.preview-title{
+@media (max-width: 650px) {
 
-    text-align:center;
+  .container {
+    margin: 20px auto;
+  }
 
-    margin-bottom:15px;
+  .card {
+    padding: 18px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 26px;
+  }
+
+  #qrImage {
+    width: 280px;
+  }
 }
-
-.preview-title h2{
-
-    margin:0;
-
-    font-size:19px;
-}
-
-.preview-title p{
-
-    margin:5px 0 0;
-
-    color:#64748b;
-
-    font-size:12px;
-}
-
-
-/* =========================================
-   QR
-========================================= */
-
-.qr-box{
-
-    min-height:340px;
-
-    padding:20px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    background:white;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:21px;
-
-    box-shadow:
-        0 15px 35px
-        rgba(15,23,42,.08);
-}
-
-#qrResult{
-
-    max-width:100%;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-}
-
-#qrResult img{
-
-    max-width:100%;
-
-    height:auto;
-
-    display:block;
-}
-
-
-/* =========================================
-   LOADING
-========================================= */
-
-.loading{
-
-    width:45px;
-
-    height:45px;
-
-    border:4px solid #e2e8f0;
-
-    border-top-color:#4f46e5;
-
-    border-radius:50%;
-
-    animation:
-        spin .8s linear infinite;
-}
-
-@keyframes spin{
-
-    to{
-        transform:rotate(360deg);
-    }
-
-}
-
-
-/* =========================================
-   STATUS
-========================================= */
-
-.status{
-
-    text-align:center;
-
-    min-height:22px;
-
-    margin-top:10px;
-
-    color:#64748b;
-
-    font-size:12px;
-}
-
-
-/* =========================================
-   DOWNLOAD
-========================================= */
-
-.download-title{
-
-    text-align:center;
-
-    margin-top:15px;
-
-    margin-bottom:8px;
-
-    font-size:13px;
-
-    font-weight:800;
-
-    color:#334155;
-}
-
-.download-grid{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:7px;
-}
-
-.download-btn{
-
-    padding:11px 5px;
-
-    border:0;
-
-    border-radius:10px;
-
-    color:white;
-
-    font-size:11px;
-
-    font-weight:800;
-
-    cursor:pointer;
-
-    transition:.15s;
-}
-
-.download-btn:hover{
-
-    transform:
-        translateY(-1px);
-}
-
-.download-btn:disabled{
-
-    opacity:.4;
-
-    cursor:not-allowed;
-
-    transform:none;
-}
-
-.png{
-    background:#16a34a;
-}
-
-.svg{
-    background:#2563eb;
-}
-
-.pdf{
-    background:#dc2626;
-}
-
-.open{
-    background:#7c3aed;
-}
-
-.share{
-    background:#0891b2;
-}
-
-
-/* =========================================
-   HISTORY
-========================================= */
-
-.history{
-
-    margin-top:25px;
-
-    padding-top:18px;
-
-    border-top:
-        1px solid #e2e8f0;
-}
-
-.history-head{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    margin-bottom:9px;
-}
-
-.history-head strong{
-
-    font-size:13px;
-}
-
-.clear{
-
-    border:0;
-
-    background:none;
-
-    color:#dc2626;
-
-    font-size:11px;
-
-    cursor:pointer;
-}
-
-.history-list{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:6px;
-}
-
-.history-item{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:9px;
-
-    padding:8px;
-
-    border-radius:9px;
-
-    background:#f8fafc;
-
-    cursor:pointer;
-}
-
-.history-item:hover{
-
-    background:#eef2ff;
-}
-
-.history-item img{
-
-    width:38px;
-
-    height:38px;
-
-    object-fit:contain;
-
-    background:white;
-
-    border-radius:6px;
-}
-
-.history-text{
-
-    min-width:0;
-
-    flex:1;
-}
-
-.history-text strong{
-
-    display:block;
-
-    white-space:nowrap;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-
-    font-size:11px;
-}
-
-.history-text small{
-
-    font-size:9px;
-
-    color:#94a3b8;
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media(max-width:800px){
-
-    .main{
-
-        grid-template-columns:1fr;
-    }
-
-    .preview{
-
-        border-left:0;
-
-        border-top:
-            1px solid #e5e7eb;
-    }
-
-}
-
-
-@media(max-width:500px){
-
-    body{
-
-        padding:7px;
-    }
-
-    .header{
-
-        padding:20px;
-    }
-
-    .editor,
-    .preview{
-
-        padding:20px;
-    }
-
-    .version{
-
-        display:none;
-    }
-
-    .grid{
-
-        grid-template-columns:1fr;
-    }
-
-    .brand h1{
-
-        font-size:20px;
-    }
-
-}
-
 </style>
-
 </head>
-
 
 <body>
 
+<div class="container">
 
-<div class="app">
+  <div class="header">
+    <h1>QR Code Generator</h1>
+    <p>สร้าง QR Code ง่าย ๆ พร้อมดาวน์โหลด</p>
+  </div>
 
+  <div class="card">
 
-<header class="header">
+    <div class="field">
+      <label for="text">ลิงก์ หรือ ข้อความ</label>
 
-    <div class="brand">
-
-        <div class="icon">
-            QR
-        </div>
-
-        <div>
-
-            <h1>
-                QR Code Studio
-            </h1>
-
-            <p>
-                สร้าง QR Code แบบง่ายและรวดเร็ว
-            </p>
-
-        </div>
-
-    </div>
-
-    <div class="version">
-        V6.0
-    </div>
-
-</header>
-
-
-
-<div class="main">
-
-
-<!-- =================================================
-     EDITOR
-================================================= -->
-
-<section class="editor">
-
-
-<div class="section">
-
-    <div class="title">
-        01 · ข้อมูล QR Code
-    </div>
-
-    <label>
-        ลิงก์เว็บไซต์ หรือข้อความ
-    </label>
-
-    <textarea
-        id="textInput"
-        placeholder="https://example.com"
-    >https://www.google.com</textarea>
-
-</div>
-
-
-
-<div class="section">
-
-    <div class="title">
-        02 · สี QR Code
+      <textarea
+        id="text"
+        placeholder="เช่น https://google.com หรือข้อความที่ต้องการสร้าง QR Code"
+      ></textarea>
     </div>
 
 
     <div class="grid">
 
+      <div>
+        <label>สี QR Code</label>
 
-        <div class="color-card">
-
-            <label>
-                สี QR
-            </label>
-
-            <div class="color-row">
-
-                <input
-                    type="color"
-                    id="darkColor"
-                    value="#111827"
-                >
-
-                <span
-                    class="hex"
-                    id="darkHex"
-                >
-                    #111827
-                </span>
-
-            </div>
-
+        <div class="color-row">
+          <input type="color" id="qrColor" value="#000000">
+          <span id="qrColorText">#000000</span>
         </div>
+      </div>
 
 
-        <div class="color-card">
+      <div>
+        <label>สีพื้นหลัง</label>
 
-            <label>
-                สีพื้นหลัง
-            </label>
-
-            <div class="color-row">
-
-                <input
-                    type="color"
-                    id="lightColor"
-                    value="#ffffff"
-                >
-
-                <span
-                    class="hex"
-                    id="lightHex"
-                >
-                    #ffffff
-                </span>
-
-            </div>
-
+        <div class="color-row">
+          <input type="color" id="bgColor" value="#ffffff">
+          <span id="bgColorText">#ffffff</span>
         </div>
+      </div>
 
 
-    </div>
-
-</div>
-
-
-
-<div class="section">
-
-    <div class="title">
-        03 · ขนาดและขอบ
-    </div>
-
-
-    <label>
-        ขนาด QR
-    </label>
-
-
-    <div class="range-row">
+      <div>
+        <label for="size">ขนาด QR</label>
 
         <input
-            type="range"
-            id="size"
-            min="250"
-            max="1000"
-            step="50"
-            value="600"
+          type="number"
+          id="size"
+          value="500"
+          min="200"
+          max="1500"
         >
-
-        <span
-            class="range-value"
-            id="sizeValue"
-        >
-            600
-        </span>
-
-    </div>
+      </div>
 
 
-    <div
-        style="
-        height:12px;
-        "
-    ></div>
-
-
-    <label>
-        ระยะขอบ
-    </label>
-
-
-    <div class="range-row">
+      <div>
+        <label for="margin">ขอบ QR</label>
 
         <input
-            type="range"
-            id="margin"
-            min="0"
-            max="10"
-            value="4"
+          type="number"
+          id="margin"
+          value="10"
+          min="0"
+          max="50"
         >
-
-        <span
-            class="range-value"
-            id="marginValue"
-        >
-            4
-        </span>
-
-    </div>
-
-</div>
-
-
-
-<div class="section">
-
-    <div class="title">
-        04 · โลโก้ตรงกลาง
-    </div>
-
-
-    <div class="logo-box">
-
-        <label>
-            อัปโหลดโลโก้
-        </label>
-
-
-        <input
-            type="file"
-            id="logoFile"
-            accept="image/png,image/jpeg,image/webp"
-        >
-
-
-        <img
-            id="logoPreview"
-            class="logo-preview"
-        >
+      </div>
 
     </div>
 
 
-    <div style="margin-top:10px">
+    <div style="margin-top:20px">
 
-        <label>
-            หรือใส่ URL โลโก้
-        </label>
+      <label for="logo">โลโก้ (ไม่บังคับ)</label>
 
-        <input
-            type="text"
-            id="logoUrl"
-            placeholder="https://example.com/logo.png"
-        >
+      <input
+        type="file"
+        id="logo"
+        accept="image/*"
+      >
+
+      <img
+        id="logoPreview"
+        class="logo-preview"
+      >
 
     </div>
 
 
-    <div
-        class="range-row"
-        style="margin-top:12px"
+    <button
+      class="generate"
+      onclick="generateQR()"
     >
-
-        <label
-            style="
-            min-width:75px;
-            margin:0;
-            "
-        >
-            ขนาด
-        </label>
+      ✨ สร้าง QR Code
+    </button>
 
 
-        <input
-            type="range"
-            id="logoSize"
-            min="10"
-            max="25"
-            value="18"
-        >
+    <div class="result">
 
+      <div id="message">
+        กรอกข้อความด้านบน แล้วกด "สร้าง QR Code"
+      </div>
 
-        <span
-            class="range-value"
-            id="logoSizeValue"
-        >
-            18%
-        </span>
+      <img
+        id="qrImage"
+        style="display:none"
+        alt="QR Code"
+      >
 
-    </div>
+      <div id="status" class="status"></div>
 
-</div>
-
-
-
-<div class="section">
-
-    <div class="title">
-        05 · ข้อความใต้ QR
-    </div>
-
-    <input
-        type="text"
-        id="caption"
-        placeholder="เช่น สแกนเพื่อดูรายละเอียด"
-    >
-
-</div>
-
-
-
-<div class="section">
-
-    <div class="title">
-        06 · กรอบ
-    </div>
-
-
-    <select id="frame">
-
-        <option value="none">
-            ไม่มีกรอบ
-        </option>
-
-        <option value="square">
-            กรอบสี่เหลี่ยม
-        </option>
-
-        <option value="rounded">
-            กรอบมน
-        </option>
-
-    </select>
-
-</div>
-
-
-
-<button
-    class="generate"
-    id="generateBtn"
-    type="button"
->
-
-    ✨ สร้าง QR Code
-
-</button>
-
-
-
-<div class="history">
-
-    <div class="history-head">
-
-        <strong>
-            🕘 QR ล่าสุด
-        </strong>
-
-        <button
-            class="clear"
-            id="clearHistory"
-            type="button"
-        >
-            ล้างประวัติ
-        </button>
+      <a
+        id="downloadButton"
+        class="download"
+        style="display:none"
+        download="qrcode.png"
+      >
+        ⬇️ ดาวน์โหลด QR Code
+      </a>
 
     </div>
 
+  </div>
 
-    <div
-        id="historyList"
-        class="history-list"
-    ></div>
-
-</div>
-
-
-</section>
-
-
-
-<!-- =================================================
-     PREVIEW
-================================================= -->
-
-<section class="preview">
-
-
-<div class="preview-title">
-
-    <h2>
-        ตัวอย่าง QR Code
-    </h2>
-
-    <p>
-        พร้อมดาวน์โหลด
-    </p>
+  <div class="footer">
+    QR Code Generator
+  </div>
 
 </div>
-
-
-
-<div class="qr-box">
-
-    <div id="qrResult">
-
-        <div
-            style="
-            color:#94a3b8;
-            font-size:13px;
-            "
-        >
-            กำลังเตรียม QR Code...
-        </div>
-
-    </div>
-
-</div>
-
-
-
-<div
-    class="status"
-    id="status"
->
-    พร้อมใช้งาน
-</div>
-
-
-
-<div class="download-title">
-    ดาวน์โหลด
-</div>
-
-
-<div class="download-grid">
-
-
-<button
-    class="download-btn png"
-    id="pngBtn"
-    type="button"
-    disabled
->
-    ⬇ PNG
-</button>
-
-
-<button
-    class="download-btn svg"
-    id="svgBtn"
-    type="button"
-    disabled
->
-    ⬇ SVG
-</button>
-
-
-<button
-    class="download-btn pdf"
-    id="pdfBtn"
-    type="button"
-    disabled
->
-    ⬇ PDF
-</button>
-
-
-<button
-    class="download-btn open"
-    id="openBtn"
-    type="button"
-    disabled
->
-    🔗 เปิด
-</button>
-
-
-<button
-    class="download-btn share"
-    id="shareBtn"
-    type="button"
-    disabled
->
-    📤 แชร์
-</button>
-
-
-</div>
-
-
-</section>
-
-
-</div>
-
-</div>
-
 
 
 <script>
 
-/* =================================================
-   QR CODE STUDIO V6
-================================================= */
-
-
-/* ================================================
-   STATE
-================================================ */
-
-let currentImage = null;
-
-let currentURL = "";
-
-let currentText = "";
-
-let logoData = "";
-
-let generating = false;
-
-
-/* ================================================
+/* =========================
    ELEMENTS
-================================================ */
+========================= */
 
-const textInput =
-    document.getElementById(
-        "textInput"
-    );
+const textInput = document.getElementById("text");
+const qrColor = document.getElementById("qrColor");
+const bgColor = document.getElementById("bgColor");
+const sizeInput = document.getElementById("size");
+const marginInput = document.getElementById("margin");
+const logoInput = document.getElementById("logo");
 
-const darkColor =
-    document.getElementById(
-        "darkColor"
-    );
+const qrImage = document.getElementById("qrImage");
+const downloadButton = document.getElementById("downloadButton");
+const message = document.getElementById("message");
+const statusText = document.getElementById("status");
 
-const lightColor =
-    document.getElementById(
-        "lightColor"
-    );
-
-const size =
-    document.getElementById(
-        "size"
-    );
-
-const margin =
-    document.getElementById(
-        "margin"
-    );
-
-const logoFile =
-    document.getElementById(
-        "logoFile"
-    );
-
-const logoUrl =
-    document.getElementById(
-        "logoUrl"
-    );
-
-const logoSize =
-    document.getElementById(
-        "logoSize"
-    );
-
-const caption =
-    document.getElementById(
-        "caption"
-    );
-
-const frame =
-    document.getElementById(
-        "frame"
-    );
-
-const qrResult =
-    document.getElementById(
-        "qrResult"
-    );
-
-const status =
-    document.getElementById(
-        "status"
-    );
-
-const generateBtn =
-    document.getElementById(
-        "generateBtn"
-    );
+const logoPreview = document.getElementById("logoPreview");
 
 
+/* =========================
+   COLOR DISPLAY
+========================= */
 
-/* ================================================
-   STATUS
-================================================ */
+qrColor.addEventListener("input", function() {
+  document.getElementById("qrColorText").textContent = this.value;
+});
 
-function setStatus(text){
-
-    status.textContent =
-        text;
-
-}
-
-
-
-/* ================================================
-   BUTTON STATE
-================================================ */
-
-function setDownloadButtons(enabled){
-
-    document
-        .querySelectorAll(
-            ".download-btn"
-        )
-        .forEach(
-            function(button){
-
-                button.disabled =
-                    !enabled;
-
-            }
-        );
-
-}
+bgColor.addEventListener("input", function() {
+  document.getElementById("bgColorText").textContent = this.value;
+});
 
 
+/* =========================
+   LOGO PREVIEW
+========================= */
 
-/* ================================================
+logoInput.addEventListener("change", function() {
+
+  const file = this.files[0];
+
+  if (!file) {
+    logoPreview.style.display = "none";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    logoPreview.src = e.target.result;
+    logoPreview.style.display = "block";
+  };
+
+  reader.readAsDataURL(file);
+
+});
+
+
+/* =========================
    GENERATE QR
-================================================ */
+========================= */
 
-function generateQR(){
+function generateQR() {
 
-    if(generating)
-        return;
+  const text = textInput.value.trim();
 
+  if (!text) {
 
-    const text =
-        textInput.value.trim();
+    alert("กรุณากรอกลิงก์หรือข้อความก่อน");
 
+    textInput.focus();
 
-    if(!text){
-
-        setStatus(
-            "⚠ กรุณากรอกข้อความหรือลิงก์"
-        );
-
-        return;
-
-    }
+    return;
+  }
 
 
-    generating =
-        true;
+  const colorDark = qrColor.value.replace("#", "");
+  const colorLight = bgColor.value.replace("#", "");
+
+  const size = parseInt(sizeInput.value) || 500;
+  const margin = parseInt(marginInput.value) || 10;
 
 
-    generateBtn.disabled =
-        true;
+  message.textContent = "กำลังสร้าง QR Code...";
+  statusText.textContent = "";
+
+  qrImage.style.display = "none";
+  downloadButton.style.display = "none";
 
 
-    setDownloadButtons(
-        false
-    );
+  /*
+    QR Server API
+
+    ไม่ต้องติดตั้ง Library
+    ไม่ต้องใช้ EasyQRCodeJS
+    ไม่ต้องใช้ jsPDF
+  */
+
+  const url =
+    "https://api.qrserver.com/v1/create-qr-code/" +
+    "?size=" + size + "x" + size +
+    "&data=" + encodeURIComponent(text) +
+    "&color=" + colorDark +
+    "&bgcolor=" + colorLight +
+    "&qzone=" + margin;
 
 
-    qrResult.innerHTML =
-        `
-        <div class="loading"></div>
-        `;
+  const newImage = new Image();
 
 
-    setStatus(
-        "กำลังสร้าง QR Code..."
-    );
+  newImage.onload = function() {
 
+    qrImage.src = newImage.src;
 
-    currentText =
-        text;
+    qrImage.style.display = "block";
 
+    message.textContent = "สร้าง QR Code สำเร็จ";
 
-    const color =
-        darkColor.value
-        .replace(
-            "#",
-            ""
-        );
-
-
-    const background =
-        lightColor.value
-        .replace(
-            "#",
-            ""
-        );
+    statusText.textContent =
+      "สามารถกดปุ่มด้านล่างเพื่อดาวน์โหลดได้เลย";
 
 
     /*
-       QR SERVER API
+      ใช้ลิงก์ภาพโดยตรง
+      ไม่ใช้ Canvas
+      จึงไม่เจอปัญหา CORS / Canvas Tainted
     */
 
-    currentURL =
-        "https://api.qrserver.com/v1/create-qr-code/"
-        +
-        "?size="
-        +
-        parseInt(size.value)
-        +
-        "x"
-        +
-        parseInt(size.value)
-        +
-        "&margin="
-        +
-        parseInt(margin.value)
-        +
-        "&color="
-        +
-        color
-        +
-        "&bgcolor="
-        +
-        background
-        +
-        "&ecc=H"
-        +
-        "&data="
-        +
-        encodeURIComponent(
-            text
-        );
+    downloadButton.href = newImage.src;
+
+    downloadButton.download = "qrcode.png";
+
+    downloadButton.style.display = "inline-block";
+
+  };
 
 
-    const img =
-        new Image();
+  newImage.onerror = function() {
+
+    message.textContent = "ไม่สามารถสร้าง QR Code ได้";
+
+    statusText.textContent =
+      "กรุณาตรวจสอบอินเทอร์เน็ต แล้วลองใหม่อีกครั้ง";
+
+  };
 
 
-    let finished =
-        false;
-
-
-    /*
-       สำคัญ:
-       ตั้ง Timeout กันค้าง
-    */
-
-    const timeout =
-        setTimeout(
-            function(){
-
-                if(finished)
-                    return;
-
-
-                finished =
-                    true;
-
-
-                generating =
-                    false;
-
-
-                generateBtn.disabled =
-                    false;
-
-
-                qrResult.innerHTML =
-                    `
-                    <div
-                    style="
-                    text-align:center;
-                    color:#dc2626;
-                    font-size:13px;
-                    "
-                    >
-                    ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ QR ได้
-                    <br><br>
-                    กรุณาลองใหม่อีกครั้ง
-                    </div>
-                    `;
-
-
-                setStatus(
-                    "❌ สร้าง QR ไม่สำเร็จ"
-                );
-
-            },
-            15000
-        );
-
-
-    img.onload =
-        function(){
-
-            if(finished)
-                return;
-
-
-            finished =
-                true;
-
-
-            clearTimeout(
-                timeout
-            );
-
-
-            currentImage =
-                img;
-
-
-            /*
-               สร้าง Canvas สำหรับ
-               Logo / Caption / Frame
-            */
-
-            buildFinalCanvas(
-                img
-            );
-
-
-            generating =
-                false;
-
-
-            generateBtn.disabled =
-                false;
-
-
-            setDownloadButtons(
-                true
-            );
-
-
-            setStatus(
-                "✓ สร้าง QR Code สำเร็จ"
-            );
-
-
-            saveHistory();
-
-        };
-
-
-    img.onerror =
-        function(){
-
-            if(finished)
-                return;
-
-
-            finished =
-                true;
-
-
-            clearTimeout(
-                timeout
-            );
-
-
-            generating =
-                false;
-
-
-            generateBtn.disabled =
-                false;
-
-
-            qrResult.innerHTML =
-                `
-                <div
-                style="
-                text-align:center;
-                color:#dc2626;
-                font-size:13px;
-                "
-                >
-                ❌ ไม่สามารถสร้าง QR ได้
-                </div>
-                `;
-
-
-            setStatus(
-                "ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่"
-            );
-
-        };
-
-
-    img.src =
-        currentURL;
+  newImage.src = url;
 
 }
 
 
+/* =========================
+   ENTER SHORTCUT
+========================= */
 
-/* ================================================
-   BUILD FINAL CANVAS
-================================================ */
+textInput.addEventListener("keydown", function(event) {
 
-function buildFinalCanvas(
-    qrImage
-){
+  if (event.ctrlKey && event.key === "Enter") {
 
-    const qrSize =
-        parseInt(
-            size.value
-        );
+    generateQR();
 
+  }
 
-    const padding =
-        35;
-
-
-    const captionText =
-        caption.value.trim();
-
-
-    const bottom =
-        captionText
-        ? 80
-        : 0;
-
-
-    const totalWidth =
-        qrSize
-        +
-        padding * 2;
-
-
-    const totalHeight =
-        qrSize
-        +
-        padding * 2
-        +
-        bottom;
-
-
-    const canvas =
-        document.createElement(
-            "canvas"
-        );
-
-
-    canvas.width =
-        totalWidth;
-
-
-    canvas.height =
-        totalHeight;
-
-
-    const ctx =
-        canvas.getContext(
-            "2d"
-        );
-
-
-    /*
-       Background
-    */
-
-    ctx.fillStyle =
-        lightColor.value;
-
-
-    ctx.fillRect(
-        0,
-        0,
-        totalWidth,
-        totalHeight
-    );
-
-
-    /*
-       Frame
-    */
-
-    if(
-        frame.value !==
-        "none"
-    ){
-
-        ctx.strokeStyle =
-            darkColor.value;
-
-
-        ctx.lineWidth =
-            8;
-
-
-        if(
-            frame.value ===
-            "rounded"
-        ){
-
-            roundedRect(
-                ctx,
-                8,
-                8,
-                totalWidth - 16,
-                totalHeight - 16,
-                25
-            );
-
-
-            ctx.stroke();
-
-        }
-        else{
-
-            ctx.strokeRect(
-                8,
-                8,
-                totalWidth - 16,
-                totalHeight - 16
-            );
-
-        }
-
-    }
-
-
-    /*
-       QR
-    */
-
-    ctx.drawImage(
-        qrImage,
-        padding,
-        padding,
-        qrSize,
-        qrSize
-    );
-
-
-    /*
-       Logo
-    */
-
-    if(logoData){
-
-        drawLogo(
-            ctx,
-            canvas,
-            qrSize,
-            padding
-        );
-
-    }
-
-
-    /*
-       Caption
-    */
-
-    if(captionText){
-
-        ctx.fillStyle =
-            darkColor.value;
-
-
-        ctx.font =
-            "bold 28px Arial";
-
-
-        ctx.textAlign =
-            "center";
-
-
-        ctx.textBaseline =
-            "middle";
-
-
-        ctx.fillText(
-            captionText,
-            totalWidth / 2,
-            qrSize
-            +
-            padding
-            +
-            40
-        );
-
-    }
-
-
-    qrResult.innerHTML =
-        "";
-
-
-    qrResult.appendChild(
-        canvas
-    );
-
-
-    qrCanvas =
-        canvas;
-
-}
-
-
-/* ================================================
-   QR CANVAS
-================================================ */
-
-let qrCanvas = null;
-
-
-
-/* ================================================
-   LOGO
-================================================ */
-
-function drawLogo(
-    ctx,
-    canvas,
-    qrSize,
-    padding
-){
-
-    const logo =
-        new Image();
-
-
-    /*
-       Base64 จากไฟล์มือถือ
-       จะไม่ติด CORS
-    */
-
-    if(
-        logoData.startsWith(
-            "data:"
-        )
-    ){
-
-        logo.onload =
-            function(){
-
-                paintLogo(
-                    ctx,
-                    logo,
-                    qrSize,
-                    padding
-                );
-
-            };
-
-
-        logo.src =
-            logoData;
-
-    }
-
-}
-
-
-/* ================================================
-   PAINT LOGO
-================================================ */
-
-function paintLogo(
-    ctx,
-    logo,
-    qrSize,
-    padding
-){
-
-    const percent =
-        parseInt(
-            logoSize.value
-        )
-        /
-        100;
-
-
-    const width =
-        qrSize
-        *
-        percent;
-
-
-    const height =
-        width;
-
-
-    const x =
-        padding
-        +
-        (
-            qrSize
-            -
-            width
-        )
-        /
-        2;
-
-
-    const y =
-        padding
-        +
-        (
-            qrSize
-            -
-            height
-        )
-        /
-        2;
-
-
-    /*
-       White background
-       รอบโลโก้
-    */
-
-    ctx.fillStyle =
-        "#ffffff";
-
-
-    roundedRect(
-        ctx,
-        x - 12,
-        y - 12,
-        width + 24,
-        height + 24,
-        12
-    );
-
-
-    ctx.fill();
-
-
-    ctx.drawImage(
-        logo,
-        x,
-        y,
-        width,
-        height
-    );
-
-
-    qrCanvas =
-        canvasFromContext(
-            ctx
-        );
-
-}
-
-
-/*
-   หมายเหตุ:
-   Canvas เดิมยังคงอยู่ใน DOM
-   การเปลี่ยน Logo จะ redraw ใหม่
-*/
-
-
-/* ================================================
-   ROUNDED RECT
-================================================ */
-
-function roundedRect(
-    ctx,
-    x,
-    y,
-    width,
-    height,
-    radius
-){
-
-    ctx.beginPath();
-
-
-    ctx.moveTo(
-        x + radius,
-        y
-    );
-
-
-    ctx.lineTo(
-        x + width - radius,
-        y
-    );
-
-
-    ctx.quadraticCurveTo(
-        x + width,
-        y,
-        x + width,
-        y + radius
-    );
-
-
-    ctx.lineTo(
-        x + width,
-        y + height - radius
-    );
-
-
-    ctx.quadraticCurveTo(
-        x + width,
-        y + height,
-        x + width - radius,
-        y + height
-    );
-
-
-    ctx.lineTo(
-        x + radius,
-        y + height
-    );
-
-
-    ctx.quadraticCurveTo(
-        x,
-        y + height,
-        x,
-        y + height - radius
-    );
-
-
-    ctx.lineTo(
-        x,
-        y + radius
-    );
-
-
-    ctx.quadraticCurveTo(
-        x,
-        y,
-        x + radius,
-        y
-    );
-
-
-    ctx.closePath();
-
-}
-
-
-
-/* ================================================
-   GET CANVAS
-================================================ */
-
-function canvasFromContext(
-    ctx
-){
-
-    return ctx.canvas;
-
-}
-
-
-
-/* ================================================
-   PNG
-================================================ */
-
-function downloadPNG(){
-
-    if(!qrCanvas){
-
-        alert(
-            "กรุณาสร้าง QR Code ก่อนครับ"
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const link =
-            document.createElement(
-                "a"
-            );
-
-
-        link.download =
-            "QR-Code.png";
-
-
-        link.href =
-            qrCanvas.toDataURL(
-                "image/png"
-            );
-
-
-        document.body.appendChild(
-            link
-        );
-
-
-        link.click();
-
-
-        link.remove();
-
-
-        setStatus(
-            "✓ ดาวน์โหลด PNG แล้ว"
-        );
-
-    }
-
-    catch(error){
-
-        console.error(
-            error
-        );
-
-
-        alert(
-            "ดาวน์โหลด PNG ไม่สำเร็จ"
-        );
-
-    }
-
-}
-
-
-
-/* ================================================
-   SVG
-================================================ */
-
-function downloadSVG(){
-
-    if(!qrCanvas){
-
-        alert(
-            "กรุณาสร้าง QR Code ก่อนครับ"
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const data =
-            qrCanvas.toDataURL(
-                "image/png"
-            );
-
-
-        const svg =
-`
-<svg
-xmlns="http://www.w3.org/2000/svg"
-width="${qrCanvas.width}"
-height="${qrCanvas.height}"
-viewBox="0 0 ${qrCanvas.width} ${qrCanvas.height}"
->
-
-<image
-href="${data}"
-x="0"
-y="0"
-width="${qrCanvas.width}"
-height="${qrCanvas.height}"
-/>
-
-</svg>
-`;
-
-
-        const blob =
-            new Blob(
-                [svg],
-                {
-                    type:
-                    "image/svg+xml"
-                }
-            );
-
-
-        const url =
-            URL.createObjectURL(
-                blob
-            );
-
-
-        const link =
-            document.createElement(
-                "a"
-            );
-
-
-        link.href =
-            url;
-
-
-        link.download =
-            "QR-Code.svg";
-
-
-        document.body.appendChild(
-            link
-        );
-
-
-        link.click();
-
-
-        link.remove();
-
-
-        URL.revokeObjectURL(
-            url
-        );
-
-
-        setStatus(
-            "✓ ดาวน์โหลด SVG แล้ว"
-        );
-
-    }
-
-    catch(error){
-
-        alert(
-            "ดาวน์โหลด SVG ไม่สำเร็จ"
-        );
-
-    }
-
-}
-
-
-
-/* ================================================
-   PDF
-================================================ */
-
-function downloadPDF(){
-
-    if(!qrCanvas){
-
-        alert(
-            "กรุณาสร้าง QR Code ก่อนครับ"
-        );
-
-        return;
-
-    }
-
-
-    const image =
-        qrCanvas.toDataURL(
-            "image/png"
-        );
-
-
-    const win =
-        window.open(
-            "",
-            "_blank"
-        );
-
-
-    if(!win){
-
-        alert(
-            "เบราว์เซอร์บล็อก Pop-up\nกรุณาอนุญาต Pop-up"
-        );
-
-        return;
-
-    }
-
-
-    win.document.write(
-`
-<!DOCTYPE html>
-
-<html>
-
-<head>
-
-<meta charset="UTF-8">
-
-<title>QR Code</title>
-
-<style>
-
-body{
-
-    margin:0;
-
-    min-height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-}
-
-img{
-
-    max-width:85vw;
-
-    max-height:85vh;
-
-}
-
-@media print{
-
-    img{
-
-        width:150mm;
-
-    }
-
-}
-
-</style>
-
-</head>
-
-<body>
-
-<img src="${image}">
-
-<script>
-
-window.onload=function(){
-
-    setTimeout(
-        function(){
-            window.print();
-        },
-        300
-    );
-
-};
-
-<\/script>
-
-</body>
-
-</html>
-`
-    );
-
-
-    win.document.close();
-
-
-    setStatus(
-        "✓ เปิดหน้าสำหรับบันทึก PDF แล้ว"
-    );
-
-}
-
-
-
-/* ================================================
-   OPEN
-================================================ */
-
-function openQR(){
-
-    if(!qrCanvas){
-
-        return;
-
-    }
-
-
-    const image =
-        qrCanvas.toDataURL(
-            "image/png"
-        );
-
-
-    const win =
-        window.open(
-            "",
-            "_blank"
-        );
-
-
-    if(!win){
-
-        alert(
-            "เบราว์เซอร์บล็อก Pop-up"
-        );
-
-        return;
-
-    }
-
-
-    win.document.write(
-`
-<!DOCTYPE html>
-
-<html>
-
-<head>
-
-<meta name="viewport"
-content="width=device-width">
-
-<title>QR Code</title>
-
-<style>
-
-body{
-
-    margin:0;
-
-    background:#111;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    min-height:100vh;
-
-}
-
-img{
-
-    max-width:95vw;
-
-    max-height:95vh;
-
-}
-
-</style>
-
-</head>
-
-<body>
-
-<img src="${image}">
-
-</body>
-
-</html>
-`
-    );
-
-
-    win.document.close();
-
-}
-
-
-
-/* ================================================
-   SHARE
-================================================ */
-
-async function shareQR(){
-
-    if(!qrCanvas){
-
-        return;
-
-    }
-
-
-    try{
-
-        const blob =
-            await new Promise(
-                function(resolve){
-
-                    qrCanvas.toBlob(
-                        resolve,
-                        "image/png"
-                    );
-
-                }
-            );
-
-
-        const file =
-            new File(
-                [blob],
-                "QR-Code.png",
-                {
-                    type:
-                    "image/png"
-                }
-            );
-
-
-        if(
-            navigator.canShare
-            &&
-            navigator.canShare({
-                files:[file]
-            })
-        ){
-
-            await navigator.share({
-
-                title:
-                    "QR Code",
-
-                text:
-                    currentText,
-
-                files:
-                    [file]
-
-            });
-
-        }
-        else if(
-            navigator.share
-        ){
-
-            await navigator.share({
-
-                title:
-                    "QR Code",
-
-                text:
-                    currentText
-
-            });
-
-        }
-        else{
-
-            alert(
-                "อุปกรณ์นี้ไม่รองรับการแชร์"
-            );
-
-        }
-
-    }
-
-    catch(error){
-
-        console.log(
-            error
-        );
-
-    }
-
-}
-
-
-
-/* ================================================
-   LOGO FILE
-================================================ */
-
-logoFile.addEventListener(
-    "change",
-    function(){
-
-        const file =
-            this.files[0];
-
-
-        if(!file)
-            return;
-
-
-        const reader =
-            new FileReader();
-
-
-        reader.onload =
-            function(event){
-
-                logoData =
-                    event.target.result;
-
-
-                const preview =
-                    document.getElementById(
-                        "logoPreview"
-                    );
-
-
-                preview.src =
-                    logoData;
-
-
-                preview.style.display =
-                    "block";
-
-
-                generateQR();
-
-            };
-
-
-        reader.readAsDataURL(
-            file
-        );
-
-    }
-);
-
-
-
-/* ================================================
-   LOGO URL
-================================================ */
-
-logoUrl.addEventListener(
-    "change",
-    function(){
-
-        const url =
-            this.value.trim();
-
-
-        if(!url)
-            return;
-
-
-        /*
-           URL ภายนอกอาจติด CORS
-           จึงใช้เป็น QR logo
-           เฉพาะกรณีที่เซิร์ฟเวอร์อนุญาต
-        */
-
-        logoData =
-            url;
-
-
-        generateQR();
-
-    }
-);
-
-
-
-/* ================================================
-   GENERATE BUTTON
-================================================ */
-
-generateBtn.addEventListener(
-    "click",
-    generateQR
-);
-
-
-
-/* ================================================
-   UPDATE VALUES
-================================================ */
-
-darkColor.addEventListener(
-    "input",
-    function(){
-
-        document.getElementById(
-            "darkHex"
-        ).textContent =
-            this.value;
-
-    }
-);
-
-
-lightColor.addEventListener(
-    "input",
-    function(){
-
-        document.getElementById(
-            "lightHex"
-        ).textContent =
-            this.value;
-
-    }
-);
-
-
-size.addEventListener(
-    "input",
-    function(){
-
-        document.getElementById(
-            "sizeValue"
-        ).textContent =
-            this.value;
-
-    }
-);
-
-
-margin.addEventListener(
-    "input",
-    function(){
-
-        document.getElementById(
-            "marginValue"
-        ).textContent =
-            this.value;
-
-    }
-);
-
-
-logoSize.addEventListener(
-    "input",
-    function(){
-
-        document.getElementById(
-            "logoSizeValue"
-        ).textContent =
-            this.value + "%";
-
-    }
-);
-
-
-
-/* ================================================
-   HISTORY
-================================================ */
-
-function saveHistory(){
-
-    try{
-
-        let history =
-            JSON.parse(
-                localStorage.getItem(
-                    "qrStudioHistory"
-                )
-            )
-            || [];
-
-
-        /*
-           ป้องกันรายการซ้ำ
-        */
-
-        history =
-            history.filter(
-                function(item){
-
-                    return item.text !==
-                        currentText;
-
-                }
-            );
-
-
-        const image =
-            qrCanvas.toDataURL(
-                "image/png"
-            );
-
-
-        history.unshift({
-
-            text:
-                currentText,
-
-            image:
-                image,
-
-            time:
-                new Date()
-                .toLocaleString(
-                    "th-TH"
-                )
-
-        });
-
-
-        history =
-            history.slice(
-                0,
-                5
-            );
-
-
-        localStorage.setItem(
-            "qrStudioHistory",
-            JSON.stringify(
-                history
-            )
-        );
-
-
-        renderHistory();
-
-    }
-
-    catch(error){
-
-        console.log(
-            "History:",
-            error
-        );
-
-    }
-
-}
-
-
-
-function renderHistory(){
-
-    const list =
-        document.getElementById(
-            "historyList"
-        );
-
-
-    list.innerHTML =
-        "";
-
-
-    let history =
-        [];
-
-
-    try{
-
-        history =
-            JSON.parse(
-                localStorage.getItem(
-                    "qrStudioHistory"
-                )
-            )
-            || [];
-
-    }
-
-    catch{
-
-        history =
-            [];
-
-    }
-
-
-    if(!history.length){
-
-        list.innerHTML =
-`
-<div
-style="
-text-align:center;
-color:#94a3b8;
-font-size:11px;
-padding:8px;
-"
->
-ยังไม่มีประวัติ
-</div>
-`;
-
-        return;
-
-    }
-
-
-    history.forEach(
-        function(item){
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            div.className =
-                "history-item";
-
-
-            div.innerHTML =
-`
-<img src="${item.image}">
-
-<div class="history-text">
-
-<strong></strong>
-
-<small>
-${item.time}
-</small>
-
-</div>
-`;
-
-
-            div.querySelector(
-                "strong"
-            ).textContent =
-                item.text;
-
-
-            div.addEventListener(
-                "click",
-                function(){
-
-                    textInput.value =
-                        item.text;
-
-
-                    generateQR();
-
-                }
-            );
-
-
-            list.appendChild(
-                div
-            );
-
-        }
-    );
-
-}
-
-
-
-/* ================================================
-   CLEAR HISTORY
-================================================ */
-
-document.getElementById(
-    "clearHistory"
-).addEventListener(
-    "click",
-    function(){
-
-        if(
-            confirm(
-                "ลบประวัติทั้งหมดหรือไม่?"
-            )
-        ){
-
-            localStorage.removeItem(
-                "qrStudioHistory"
-            );
-
-
-            renderHistory();
-
-
-            setStatus(
-                "ล้างประวัติแล้ว"
-            );
-
-        }
-
-    }
-);
-
-
-
-/* ================================================
-   START
-================================================ */
-
-window.addEventListener(
-    "load",
-    function(){
-
-        renderHistory();
-
-        /*
-           สร้าง QR หลังหน้าโหลด
-        */
-
-        setTimeout(
-            generateQR,
-            300
-        );
-
-    }
-);
+});
 
 </script>
 
