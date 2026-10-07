@@ -1,328 +1,20 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>QR Code Generator</title>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, "Noto Sans Thai", sans-serif;
-  background: #f4f7fb;
-  color: #1f2937;
-}
-
-.container {
-  width: min(900px, 94%);
-  margin: 40px auto;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.header h1 {
-  margin: 0;
-  font-size: 32px;
-  color: #111827;
-}
-
-.header p {
-  margin-top: 8px;
-  color: #6b7280;
-}
-
-.card {
-  background: white;
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.08);
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-textarea,
-input[type="text"],
-input[type="number"] {
-  width: 100%;
-  border: 1px solid #d1d5db;
-  border-radius: 12px;
-  padding: 13px;
-  font-size: 16px;
-  outline: none;
-}
-
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-textarea:focus,
-input:focus {
-  border-color: #2563eb;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
-  margin-top: 20px;
-}
-
-.field {
-  margin-bottom: 5px;
-}
-
-.color-row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-input[type="color"] {
-  width: 55px;
-  height: 45px;
-  border: 0;
-  padding: 0;
-  background: none;
-  cursor: pointer;
-}
-
-button {
-  border: 0;
-  border-radius: 12px;
-  padding: 14px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.generate {
-  width: 100%;
-  margin-top: 25px;
-  background: #2563eb;
-  color: white;
-}
-
-.generate:hover {
-  background: #1d4ed8;
-}
-
-.result {
-  margin-top: 25px;
-  text-align: center;
-  padding: 25px;
-  background: #f8fafc;
-  border-radius: 16px;
-}
-
-#qrImage {
-  display: block;
-  max-width: 100%;
-  width: 350px;
-  margin: auto;
-  background: white;
-  padding: 10px;
-  border-radius: 12px;
-}
-
-.download {
-  display: inline-block;
-  margin-top: 20px;
-  background: #16a34a;
-  color: white;
-  text-decoration: none;
-  padding: 14px 25px;
-  border-radius: 12px;
-  font-weight: bold;
-}
-
-.download:hover {
-  background: #15803d;
-}
-
-.status {
-  margin-top: 12px;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-.logo-preview {
-  display: none;
-  max-width: 80px;
-  max-height: 80px;
-  margin-top: 10px;
-}
-
-.footer {
-  text-align: center;
-  color: #9ca3af;
-  font-size: 13px;
-  margin-top: 20px;
-}
-
-@media (max-width: 650px) {
-
-  .container {
-    margin: 20px auto;
-  }
-
-  .card {
-    padding: 18px;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .header h1 {
-    font-size: 26px;
-  }
-
-  #qrImage {
-    width: 280px;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <div class="header">
-    <h1>QR Code Generator</h1>
-    <p>สร้าง QR Code ง่าย ๆ พร้อมดาวน์โหลด</p>
-  </div>
-
-  <div class="card">
-
-    <div class="field">
-      <label for="text">ลิงก์ หรือ ข้อความ</label>
-
-      <textarea
-        id="text"
-        placeholder="เช่น https://google.com หรือข้อความที่ต้องการสร้าง QR Code"
-      ></textarea>
-    </div>
-
-
-    <div class="grid">
-
-      <div>
-        <label>สี QR Code</label>
-
-        <div class="color-row">
-          <input type="color" id="qrColor" value="#000000">
-          <span id="qrColorText">#000000</span>
-        </div>
-      </div>
-
-
-      <div>
-        <label>สีพื้นหลัง</label>
-
-        <div class="color-row">
-          <input type="color" id="bgColor" value="#ffffff">
-          <span id="bgColorText">#ffffff</span>
-        </div>
-      </div>
-
-
-      <div>
-        <label for="size">ขนาด QR</label>
-
-        <input
-          type="number"
-          id="size"
-          value="500"
-          min="200"
-          max="1000"
-        >
-      </div>
-
-
-      <div>
-        <label for="margin">ขอบ QR</label>
-
-        <input
-          type="number"
-          id="margin"
-          value="2"
-          min="0"
-          max="50"
-        >
-      </div>
-
-    </div>
-
-
-    <div style="margin-top:20px">
-
-      <label for="logo">โลโก้ (ไม่บังคับ)</label>
-
-      <input
-        type="file"
-        id="logo"
-        accept="image/*"
-      >
-
-      <img
-        id="logoPreview"
-        class="logo-preview"
-      >
-
-    </div>
-
-
-    <button
-      class="generate"
-      onclick="generateQR()"
-    >
-      ✨ สร้าง QR Code
-    </button>
-
-
-    <div class="result">
-
-      <div id="message">
-        กรอกข้อความด้านบน แล้วกด "สร้าง QR Code"
-      </div>
-
-      <img
-        id="qrImage"
-        style="display:none"
-        alt="QR Code"
-      >
-
-      <div id="status" class="status" role="status" aria-live="polite"></div>
-
-      <button id="downloadButton" class="download" style="display:none" type="button">⬇️ ดาวน์โหลด PNG</button>
-      <a id="openImageButton" class="download" style="display:none" target="_blank" rel="noopener noreferrer">เปิดภาพเพื่อบันทึกเอง</a>
-
-    </div>
-
-  </div>
-
-  <div class="footer">
-    QR Code Generator
-  </div>
-
-</div>
-
-
-<script>
+<!doctype html><html lang="th"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QR Shape Studio — เวอร์ชันเต็ม</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:#213c32;font:16px Arial,sans-serif}.app{max-width:850px;margin:30px auto;padding:24px}h1{margin:0 0 8px}p{line-height:1.6;color:#65756d}.panel{background:white;border-radius:24px;padding:24px;box-shadow:0 12px 40px #213c3210}textarea{width:100%;padding:12px;border:1px solid #c8d8cf;border-radius:12px;font:inherit}button,select{padding:12px 16px;border:0;border-radius:12px;background:#e5eee9;color:#213c32;font:inherit;cursor:pointer}button.primary{background:#246947;color:white}.row{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;align-items:center}canvas{display:block;width:100%;height:auto;background:#fff;border-radius:18px}input[type=range]{width:100%;accent-color:#246947}.tag{font-size:13px;color:#5c7166}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #d5a65c}#status{min-height:24px}@media(max-width:600px){.app{padding:12px;margin:12px auto}.panel{padding:16px}}
+
+body{background:radial-gradient(ellipse at 15% 0%,#e4eedd,transparent 55%),#f4f3ee;color:#243b30;font-family:"Segoe UI",Tahoma,sans-serif}
+.app{max-width:1040px;margin:36px auto}h1{font-size:clamp(30px,5vw,48px);letter-spacing:-1.8px;font-weight:650}
+.panel{border:1px solid #e1e5da;border-radius:30px;box-shadow:0 24px 70px #3147320c;padding:30px}
+.studio-label{color:#7d8a6b;font-size:11px;letter-spacing:2.5px;margin-bottom:24px}
+label{font-size:14px;font-weight:600}textarea{margin-top:10px;background:#fafbf8;line-height:1.6}
+.preview{border:1px solid #e1e8df;border-radius:24px;background:#f5f8f2;margin:24px 0;overflow:hidden}
+.preview-label{display:flex;justify-content:space-between;padding:18px 22px;color:#819078;font-size:11px;letter-spacing:1.3px}
+canvas{background:transparent;cursor:grab;touch-action:pan-y}canvas:active{cursor:grabbing}
+.row button{transition:background .2s,transform .2s}.row button:hover{background:#d4e2d6;transform:translateY(-1px)}.row .primary:hover{background:#195937}
+#degrees{float:right;font-variant-numeric:tabular-nums;color:#4e795c}
+#angle{height:30px}#status{padding:12px 16px;border-radius:12px;background:#f1f6ec;color:#4a6a4b;font-size:14px}
+.tag{font-size:12px}select{background:#f1f4ed;border:1px solid #e2e8dc}
+@media(min-width:750px){canvas{max-height:590px;object-fit:contain}.row{gap:12px}}
+.settings{border-top:1px solid #e4e9df;padding:18px 0}.settings summary{cursor:pointer;font-weight:600;margin-bottom:16px}.settings-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}.settings-grid input{display:block;margin-top:8px;width:100%;height:44px;border:1px solid #d6dfd2;border-radius:10px;padding:8px;background:#fafbf8;font:inherit}input[type=file]{max-width:100%;font:inherit}#logoPreview{object-fit:contain;border-radius:8px}@media(max-width:650px){.settings-grid{grid-template-columns:1fr 1fr}}button:disabled{opacity:.5;cursor:wait}</style><main class="app"><h1>QR Shape Studio</h1><p>หมุนหนึ่งรอบ ค้นพบอีกภาพ · QR ที่เปลี่ยนมุมมองเป็นรูปน่ารัก</p><div class="panel"><div class="studio-label">INTERACTIVE OBJECT · 360°</div><label for="text">ลิงก์หรือข้อความ</label><textarea id="text" rows="2">https://nattapong7955-oss.github.io/Qr/</textarea><div class="row"><button class="primary" id="generate">สร้างใหม่</button><label for="shape">รูปที่ต้องการ</label><select id="shape"><option value="tree">🌲 ต้นไม้</option><option value="heart">♥ หัวใจ</option><option value="cat">🐱 แมว</option><option value="bunny">🐰 กระต่าย</option></select></div><details open class="settings"><summary>สี ขนาด และโลโก้</summary><div class="settings-grid"><label>สี QR<input id="dark" type="color" value="#14291e"></label><label>สีพื้นหลัง<input id="light" type="color" value="#ffffff"></label><label>ขนาด PNG (px)<input id="size" type="number" min="200" max="1500" value="600" required></label><label>ขอบ QR (ช่อง)<input id="margin" type="number" min="0" max="50" value="2" required></label></div><label for="logo">โลโก้</label><div class="row"><input id="logo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><button id="clearLogo">ลบโลโก้</button><img id="logoPreview" alt="ตัวอย่างโลโก้" hidden width="48" height="48"></div><p class="tag">กดสร้างใหม่หลังเปลี่ยนสี ขนาด หรือขอบ · โลโก้แสดงบนด้าน QR และ PNG</p></details><div class="preview"><div class="preview-label"><span>LIVE PREVIEW</span><span>ลากเพื่อหมุน ↔</span></div><canvas id="view" width="900" height="720" tabindex="0" aria-label="ชิ้นส่วน QR สามมิติหมุนเป็นรูป ใช้ลูกศรซ้ายขวาเพื่อหมุน"></canvas></div><label for="angle">มุมหมุน <span id="degrees">0° · QR</span></label><input type="range" id="angle" min="0" max="360" step="0.1" value="0"><div class="row"><button id="front">ดู QR</button><button id="side">ดูรูป</button><button id="play">▶ หมุนให้ดู</button><button id="download" class="primary">ดาวน์โหลด PNG ของ QR</button></div><p id="status" role="status"></p><p class="tag">เวอร์ชันเต็มสำหรับตรวจในเครื่อง · สแกนเมื่อมุมเป็น 0° · รูปด้านข้างเป็นเงารูปร่างจากชิ้นส่วน QR รายละเอียดขึ้นกับลาย QR</p></div></main><script>
 //---------------------------------------------------------------------
 //
 // QR Code Generator for JavaScript
@@ -2649,27 +2341,49 @@ var qrcode = function() {
 }(qrcode);
 
 qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
-</script>
-<script>
-const $ = id => document.getElementById(id);
-const textInput = $("text"), qrColor = $("qrColor"), bgColor = $("bgColor");
-const sizeInput = $("size"), marginInput = $("margin"), logoInput = $("logo");
-const qrImage = $("qrImage"), downloadButton = $("downloadButton");
-const openImageButton = $("openImageButton"), message = $("message"), statusText = $("status");
-const logoPreview = $("logoPreview"), generateButton = document.querySelector(".generate");
-let resultURL = null, requestNumber = 0, controller = null;
-for (const input of [qrColor, bgColor]) {
-  input.addEventListener("input", () => $(input.id + "Text").textContent = input.value);
+</script><script>
+qrcode.stringToBytes=qrcode.stringToBytesFuncs['UTF-8'];
+const el=id=>document.getElementById(id), canvas=el('view'),ctx=canvas.getContext('2d');let qr,points=[],animation=null,tilt=0,logoImage=null,logoFile=null,logoVersion=0;let activeDark='#14291e',activeLight='#ffffff',activeSize=600,activeMargin=2;
+function segments(y,shape){
+ if(shape==='tree'){if(y>.76)return [[-.1,.1]];const layer=y<.28?0:y<.53?1:2;const start=[0,.20,.43][layer],width=[.32,.43,.56][layer];const w=.04+width*(y-start)/([.28,.33,.33][layer]);return [[-w,w]];}
+ if(shape==='heart'){if(y<.22){const r=.25*Math.sqrt(Math.max(0,1-Math.pow((y-.19)/.2,2)));return [[-.26-r,-.26+r],[.26-r,.26+r]];}const w=.52*Math.pow((1-y)/.78,.8);return [[-w,w]];}
+ if(shape==='cat'){if(y<.3){const w=.05+y*.55;return [[-.40,-.40+w],[.40-w,.40]];}const t=(y-.61)/.40;return [[-.53*Math.sqrt(Math.max(.02,1-t*t)),.53*Math.sqrt(Math.max(.02,1-t*t))]];}
+ if(y<.48){const w=.095*Math.sqrt(Math.max(.02,1-Math.pow((y-.24)/.25,2)));return [[-.23-w,-.23+w],[.23-w,.23+w]];}const w=.47*Math.sqrt(Math.max(.02,1-Math.pow((y-.72)/.29,2)));return [[-w,w]];
 }
-logoInput.addEventListener("change", () => {
-  const file = logoInput.files[0];
-  logoPreview.style.display = "none";
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => { logoPreview.src = reader.result; logoPreview.style.display = "block"; };
-  reader.onerror = () => statusText.textContent = "อ่านไฟล์โลโก้ไม่ได้ กรุณาเลือกใหม่";
-  reader.readAsDataURL(file);
-});
+function arrange(){const n=qr.getModuleCount();points=[];for(let row=0;row<n;row++){const cols=[];for(let col=0;col<n;col++)if(qr.isDark(row,col))cols.push(col);const ranges=segments(row/(n-1),el('shape').value),width=ranges.reduce((sum,r)=>sum+r[1]-r[0],0);cols.forEach((col,i)=>{let d=width*(i+.5)/cols.length,z=ranges[0][0];for(const r of ranges){if(d<=r[1]-r[0]){z=r[0]+d;break;}d-=r[1]-r[0];}points.push({x:(col-(n-1)/2)/n,y:(row-(n-1)/2)/n,z:z*.91});});}draw();}
+function draw(){
+ const rawAngle=Number(el('angle').value),angle=((rawAngle%360)+360)%360;tilt=42*Math.pow(Math.sin(angle*Math.PI/90),2);const a=angle*Math.PI/180,c=Math.cos(a),s=Math.sin(a),b=tilt*Math.PI/180,cb=Math.cos(b),sb=Math.sin(b),n=qr.getModuleCount(),scale=510,cell=1/n;
+ function project(x,y,z){const xx=x*c+z*s,zz=-x*s+z*c;return {x:450+xx*scale,y:335+(y*cb-zz*sb)*scale,depth:y*sb+zz*cb};}
+ const gradient=ctx.createRadialGradient(450,300,30,450,350,600);gradient.addColorStop(0,'#ffffff');gradient.addColorStop(1,'#edf3e7');ctx.fillStyle=gradient;ctx.fillRect(0,0,900,720);
+ ctx.save();ctx.translate(450,590);ctx.scale(1,.14);const shadow=ctx.createRadialGradient(0,0,10,0,0,240);shadow.addColorStop(0,'#36563722');shadow.addColorStop(1,'#36563700');ctx.fillStyle=shadow;ctx.beginPath();ctx.arc(0,0,240,0,Math.PI*2);ctx.fill();ctx.restore();
+ if(angle===0){ctx.fillStyle=activeLight;ctx.fillRect(450-scale/2-36,335-scale/2-36,scale+72,scale+72);}const sorted=points.map(p=>({...p,depth:project(p.x,p.y,p.z).depth})).sort((a,b)=>a.depth-b.depth);
+ for(const p of sorted){
+  if(tilt<.0001&&(angle===0||angle===90||angle===180||angle===270)){const pos=project(p.x,p.y,p.z);ctx.fillStyle=(angle===0||angle===180)?activeDark:'#286948';ctx.fillRect(pos.x-cell*scale/2,pos.y-cell*scale/2,cell*scale+.35,cell*scale+.35);continue;}
+  const h=cell/2,vertices=[[-h,-h,-h],[h,-h,-h],[h,h,-h],[-h,h,-h],[-h,-h,h],[h,-h,h],[h,h,h],[-h,h,h]].map(v=>project(p.x+v[0],p.y+v[1],p.z+v[2]));
+  const faces=[[0,1,2,3],[4,5,6,7],[0,1,5,4],[3,2,6,7],[0,3,7,4],[1,2,6,5]].map((indices,i)=>({indices,i,depth:indices.reduce((sum,j)=>sum+vertices[j].depth,0)/4})).sort((a,b)=>a.depth-b.depth);
+  for(const face of faces){ctx.beginPath();face.indices.forEach((j,k)=>{const v=vertices[j];k?ctx.lineTo(v.x,v.y):ctx.moveTo(v.x,v.y);});ctx.closePath();ctx.fillStyle='hsl(151 38% '+(25+face.i*4)+ '%)';ctx.fill();}
+ }
+ if(angle===0&&logoImage){const box=scale*.22,padding=scale*.015,k=Math.min((box-padding*2)/logoImage.naturalWidth,(box-padding*2)/logoImage.naturalHeight),w=logoImage.naturalWidth*k,h=logoImage.naturalHeight*k;ctx.fillStyle=activeLight;ctx.fillRect(450-box/2,335-box/2,box,box);ctx.drawImage(logoImage,450-w/2,335-h/2,w,h);}ctx.fillStyle='#65756d';ctx.font='18px Arial';ctx.textAlign='center';ctx.fillText(angle===0?'QR · มุมสแกน':angle===180?'QR · ด้านหลัง':(angle===90||angle===270)?el('shape').selectedOptions[0].textContent:'สำรวจชิ้นส่วนจากทุกมุม',450,662);
+ el('degrees').textContent=Math.round(rawAngle)+'°'+(angle===0?' · QR':(angle===90||angle===270)?' · รูป':tilt>1?' · มุมบน':'');
+}
+function stop(){if(animation)cancelAnimationFrame(animation);animation=null;el('play').textContent='▶ หมุนให้ดู';}
+function turn(v){stop();tilt=0;el('angle').value=v;draw();}
+el('angle').addEventListener('input',()=>{stop();tilt=0;draw();});el('front').onclick=()=>turn(0);el('side').onclick=()=>turn(90);el('shape').onchange=()=>{stop();tilt=0;arrange();};
+function generate(){stop();tilt=0;try{const text=el('text').value.trim();if(!text)throw Error('กรุณากรอกข้อความ');if(!el('size').reportValidity()||!el('margin').reportValidity())return;activeSize=Number(el('size').value);activeMargin=Number(el('margin').value);if(!Number.isInteger(activeSize)||!Number.isInteger(activeMargin))throw Error('ขนาดและขอบต้องเป็นจำนวนเต็ม');activeDark=el('dark').value;activeLight=el('light').value;const next=qrcode(0,logoImage?'H':'M');next.addData(text,'Byte');next.make();qr=next;el('angle').value=0;arrange();el('status').textContent='พร้อมแล้ว ลองกดดูรูปหรือเลื่อนมุมหมุน';}catch(e){el('status').textContent='สร้างไม่ได้: '+e.message;}}
+el('generate').onclick=generate;
+el('play').onclick=()=>{
+ if(animation){stop();return;}
+ const start=performance.now(),from=Number(el('angle').value),duration=10000;
+ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){turn(90);return;}
+ el('play').textContent='⏸ หยุด';el('status').textContent='หมุนครบหนึ่งรอบ · กดหยุดหรือลากเพื่อเลือกมุมได้';
+ function frame(now){const t=Math.min(1,(now-start)/duration),ease=t*t*(3-2*t),v=from+360*ease;el('angle').value=v>360?v%360:v;draw();if(t<1){animation=requestAnimationFrame(frame);}else{stop();el('status').textContent='หมุนครบ 360° แล้ว · เลือกรูปอื่นเพื่อลองอีกครั้ง';}}
+ animation=requestAnimationFrame(frame);
+};
+let pointer=null;
+canvas.addEventListener('pointerdown',event=>{stop();pointer={id:event.pointerId,x:event.clientX,angle:Number(el('angle').value)};canvas.setPointerCapture(event.pointerId);});
+canvas.addEventListener('pointermove',event=>{if(!pointer||pointer.id!==event.pointerId)return;const v=pointer.angle+(event.clientX-pointer.x)*360/canvas.getBoundingClientRect().width;el('angle').value=((v%360)+360)%360;draw();});
+function release(){pointer=null;}
+canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
 function loadImage(url) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -2683,30 +2397,6 @@ async function validatePNG(blob) {
   const bytes = new Uint8Array(await blob.slice(0, 8).arrayBuffer());
   const signature = [137, 80, 78, 71, 13, 10, 26, 10];
   if (!signature.every((value, i) => bytes[i] === value)) throw new Error("API ไม่ได้ส่ง PNG");
-}
-async function createLocalQR(text, size, margin, dark, light, hasLogo) {
-  const qr = qrcode(0, hasLogo ? "H" : "L");
-  qr.addData(text, "Byte");
-  qr.make();
-  const count = qr.getModuleCount(), total = count + margin * 2;
-  const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = size;
-  const context = canvas.getContext("2d");
-  context.fillStyle = light;
-  context.fillRect(0, 0, size, size);
-  context.fillStyle = dark;
-  for (let row = 0; row < count; row++) {
-    for (let col = 0; col < count; col++) {
-      if (!qr.isDark(row, col)) continue;
-      const x = Math.round((col + margin) * size / total);
-      const y = Math.round((row + margin) * size / total);
-      context.fillRect(x, y,
-        Math.round((col + margin + 1) * size / total) - x,
-        Math.round((row + margin + 1) * size / total) - y);
-    }
-  }
-  return await new Promise((resolve, reject) => canvas.toBlob(
-    blob => blob ? resolve(blob) : reject(new Error("สร้าง PNG ไม่ได้")), "image/png"));
 }
 async function addLogo(blob, file, background) {
   const url = URL.createObjectURL(blob), logoURL = URL.createObjectURL(file);
@@ -2727,105 +2417,27 @@ async function addLogo(blob, file, background) {
     ));
   } finally { URL.revokeObjectURL(url); URL.revokeObjectURL(logoURL); }
 }
-async function generateQR() {
-  const text = textInput.value.trim();
-  if (!text) { alert("กรุณากรอกลิงก์หรือข้อความก่อน"); textInput.focus(); return; }
-  if (!sizeInput.reportValidity() || !marginInput.reportValidity()) return;
-  const size = Number(sizeInput.value), margin = Number(marginInput.value);
-  if (!Number.isInteger(size) || size < 200 || size > 1000 ||
-      !Number.isInteger(margin) || margin < 0 || margin > 50) {
-    statusText.textContent = "ขนาดต้องเป็น 200–1000 และขอบ 0–50 (จำนวนเต็ม)"; return;
-  }
-  const id = ++requestNumber;
-  if (controller) controller.abort();
-  controller = new AbortController();
-  const currentController = controller;
-  const file = logoInput.files[0], background = bgColor.value;
-  if (resultURL) { URL.revokeObjectURL(resultURL); resultURL = null; }
-  qrImage.style.display = downloadButton.style.display = openImageButton.style.display = "none";
-  message.textContent = "กำลังสร้าง QR Code...";
-  statusText.textContent = "";
-  generateButton.disabled = true;
-  const url = new URL("https://api.qrserver.com/v1/create-qr-code/");
-  url.search = new URLSearchParams({
-    size: size + "x" + size, data: text, color: qrColor.value.slice(1),
-    bgcolor: background.slice(1), qzone: String(margin), margin: "0", format: "png",
-    ecc: file ? "H" : "L", "charset-source": "UTF-8", "charset-target": "UTF-8"
-  }).toString();
-  const timer = setTimeout(() => currentController.abort(), 15000);
-  try {
-    // A successful CORS fetch proves the browser can read this response.
-    // Never use no-cors: an opaque response cannot become a usable PNG.
-    let blob;
-    try {
-      const response = await fetch(url.href, {
-        mode: "cors", credentials: "omit", signal: currentController.signal
-      });
-      if (!response.ok) throw new Error("HTTP " + response.status);
-      if (!/^image\/png\b/i.test(response.headers.get("Content-Type") || "")) {
-        throw new Error("ชนิดไฟล์ไม่ใช่ PNG");
-      }
-      blob = await response.blob();
-      await validatePNG(blob);
-    } catch (error) {
-      // Create the QR locally when the API or CORS fails, preserving the logo.
-      blob = await createLocalQR(text, size, margin, qrColor.value, background, !!file);
-    } finally { clearTimeout(timer); }
-    if (file) blob = await addLogo(blob, file, background);
-    if (id !== requestNumber) return;
-    const localURL = URL.createObjectURL(blob);
-    try { await loadImage(localURL); } catch (error) { URL.revokeObjectURL(localURL); throw error; }
-    if (id !== requestNumber) { URL.revokeObjectURL(localURL); return; }
-    resultURL = localURL;
-    qrImage.src = localURL;
-    qrImage.style.display = "block";
-    downloadButton.style.display = "inline-block";
-    openImageButton.href = localURL;
-    openImageButton.style.display = "inline-block";
-    message.textContent = "สร้าง QR Code สำเร็จ";
-    statusText.textContent = file
-      ? "พร้อมดาวน์โหลด PNG พร้อมโลโก้ โปรดลองสแกนก่อนใช้งาน"
-      : "พร้อมดาวน์โหลด PNG ลงเครื่อง";
-  } catch (error) {
-    if (id !== requestNumber) return;
-    if (file) {
-      message.textContent = "สร้าง QR พร้อมโลโก้ไม่สำเร็จ";
-      statusText.textContent = "กรุณาเลือกภาพ PNG หรือ JPG ที่เปิดได้ แล้วกดสร้างใหม่";
-      return;
-    }
-    // A cross-origin image may display even when fetch is blocked by CORS.
-    // It cannot safely be exported via canvas, so offer manual saving explicitly.
-    try {
-      await loadImage(url.href);
-      if (id !== requestNumber) return;
-      qrImage.src = url.href; qrImage.style.display = "block";
-      openImageButton.href = url.href; openImageButton.style.display = "inline-block";
-      message.textContent = "แสดง QR Code ได้ แต่ดาวน์โหลดอัตโนมัติไม่ได้";
-      statusText.textContent = "CORS หรือการเชื่อมต่อไม่อนุญาตให้อ่านไฟล์: กดเปิดภาพ แล้วคลิกขวาหรือกดค้างเพื่อบันทึกภาพ" +
-        (file ? " (ภาพสำรองนี้ไม่มีโลโก้)" : "");
-    } catch {
-      if (id !== requestNumber) return;
-      message.textContent = "ไม่สามารถสร้าง QR Code ได้";
-      statusText.textContent = "กรุณาตรวจสอบอินเทอร์เน็ต แล้วกดสร้างใหม่";
-    }
-  } finally {
-    clearTimeout(timer);
-    if (id === requestNumber) generateButton.disabled = false;
-  }
-}
-downloadButton.addEventListener("click", () => {
-  if (!resultURL) return;
-  const link = document.createElement("a");
-  // Only a local Blob URL receives the download attribute.
-  link.href = resultURL; link.download = "qrcode.png";
-  document.body.appendChild(link); link.click(); link.remove();
-  statusText.textContent = "ส่งคำขอดาวน์โหลด qrcode.png แล้ว หากเบราว์เซอร์เปิดภาพ ให้เลือกบันทึกภาพ";
-});
-textInput.addEventListener("keydown", event => {
-  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") { event.preventDefault(); generateQR(); }
-});
-window.addEventListener("pagehide", () => { if (controller) controller.abort(); });
-</script>
 
-</body>
-</html>
+el('logo').addEventListener('change',async()=>{
+ const version=++logoVersion,file=el('logo').files[0];logoImage=null;logoFile=null;el('logoPreview').hidden=true;
+ if(!file){generate();return;}el('generate').disabled=true;el('download').disabled=true;
+ const url=URL.createObjectURL(file);
+ try{const image=await loadImage(url);if(version!==logoVersion)return;logoImage=image;logoFile=file;el('logoPreview').src=image.src;el('logoPreview').hidden=false;generate();}
+ catch{el('status').textContent='เปิดโลโก้ไม่ได้ กรุณาเลือกไฟล์ภาพใหม่';}
+ finally{URL.revokeObjectURL(url);if(version===logoVersion){el('generate').disabled=false;el('download').disabled=false;}}
+});
+el('clearLogo').onclick=()=>{++logoVersion;el('logo').value='';logoImage=null;logoFile=null;el('logoPreview').hidden=true;el('generate').disabled=false;el('download').disabled=false;generate();};
+canvas.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();turn((Number(el('angle').value)+(event.key==='ArrowLeft'?-5:5)+360)%360);}});
+el('download').onclick=async()=>{
+ el('download').disabled=true;
+ try{
+ const n=qr.getModuleCount(),total=n+activeMargin*2,out=document.createElement('canvas');out.width=out.height=activeSize;
+ const c=out.getContext('2d');c.fillStyle=activeLight;c.fillRect(0,0,activeSize,activeSize);c.fillStyle=activeDark;
+ for(let r=0;r<n;r++)for(let col=0;col<n;col++)if(qr.isDark(r,col)){const x=Math.round((col+activeMargin)*activeSize/total),y=Math.round((r+activeMargin)*activeSize/total);c.fillRect(x,y,Math.round((col+activeMargin+1)*activeSize/total)-x,Math.round((r+activeMargin+1)*activeSize/total)-y);}
+ let blob=await new Promise((resolve,reject)=>out.toBlob(value=>value?resolve(value):reject(Error('สร้าง PNG ไม่ได้')),'image/png'));
+ if(logoFile)blob=await addLogo(blob,logoFile,activeLight);
+ const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='qrcode.png';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+ el('status').textContent='ส่งคำขอดาวน์โหลด PNG แล้ว · โปรดลองสแกนไฟล์ก่อนใช้งาน';
+ }catch(e){el('status').textContent='ดาวน์โหลดไม่ได้: '+e.message;}finally{el('download').disabled=false;}
+};generate();
+</script></html>
